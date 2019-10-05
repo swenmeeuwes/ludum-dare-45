@@ -3,16 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class IntroductionController : MonoBehaviour {
     [SerializeField] private Paw _paw;
     [SerializeField] private TMP_Text _storyTextField;
     [SerializeField] private TMP_Text _instructionTextField;
     [SerializeField] private Rigidbody2D _coin;
+    [SerializeField] private CanvasGroup _fader;
 
     private void Start() {
         _paw.CanvasGroup.alpha = 0;
         _coin.gravityScale = 0;
+        _fader.alpha = 0;
 
         StartCoroutine(RunIntro());
     }
@@ -159,6 +162,15 @@ public class IntroductionController : MonoBehaviour {
         _coin.gravityScale = 2;
         _coin.AddTorque(45000f);
 
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(9f);
+
+        _fader.DOFade(1, 2.45f);
+
+        var loadSceneOperation = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
+        loadSceneOperation.allowSceneActivation = false;
+
+        yield return new WaitForSeconds(2.45f);
+
+        loadSceneOperation.allowSceneActivation = true;
     }
 }
