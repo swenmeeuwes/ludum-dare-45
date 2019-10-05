@@ -85,5 +85,28 @@ public class TutorialController : MonoBehaviour {
 
         _speechBalloon.DOFade(0, .45f);
         yield return new WaitForSeconds(.45f);
+
+        _speechBalloonTextField.text = "I see homan next day, yes?";
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        _speechBalloonTextField.text = "Goodbye for now!";
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        yield return new WaitForSeconds(1f);
+
+        _catEyes.enabled = false;
+        _cat.DOMove(_cat.transform.position + new Vector3(0, -150, 0), .45f);
+
+        yield return new WaitForSeconds(.55f);
+
+        _fader.DOFade(0, .35f);
     }
 }
