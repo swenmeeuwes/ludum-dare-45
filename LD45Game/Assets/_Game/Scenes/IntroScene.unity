@@ -973,6 +973,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paw: {fileID: 2034511662}
   _storyTextField: {fileID: 470149779}
+  _instructionTextField: {fileID: 1633470464}
   _coin: {fileID: 2036912035}
 --- !u!4 &2068045633
 Transform:
