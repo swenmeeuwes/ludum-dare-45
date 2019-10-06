@@ -11,7 +11,7 @@ public class NpcModel {
     public int AmountThresholdForLeaving { get; set; }
     public int AmountOfOffers { get; set; }
 
-    public int OfferIncrement {
+    public int MaxOfferIncrement {
         get {
             var offerDelta = MaxOfferAmount - InitialOfferAmount;
             return offerDelta / AmountOfOffers;

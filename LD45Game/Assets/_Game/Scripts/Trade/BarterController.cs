@@ -22,6 +22,7 @@ public class BarterController : MonoBehaviour
     [SerializeField] private string[] _sellingDialogs;
     [SerializeField] private string[] _tooExpensiveDialogs;
     [SerializeField] private string[] _wayTooExpensiveDialogs;
+    [SerializeField] private string[] _tooManyOfferIterationsDialogs;
     [SerializeField] private string[] _soldDialogs;
     [SerializeField] private string _itemNameInterpolator = "%item%";
     [SerializeField] private string _priceInterpolator = "%price%";
@@ -35,6 +36,7 @@ public class BarterController : MonoBehaviour
     public ItemData CurrentItemData { get; private set; }
     public int CurrentOfferIteration { get; private set; }
     public int CurrentAcceptAmountByNpc { get; private set; }
+    public int? FirstOffer { get; private set; }
 
     private bool _userCanInput;
     public bool UserCanInput {
@@ -73,6 +75,10 @@ public class BarterController : MonoBehaviour
             CurrentOfferAmount = 0;
         }
 
+        if (FirstOffer.HasValue && CurrentOfferAmount > FirstOffer) {
+            CurrentOfferAmount = FirstOffer;
+        }
+
         UpdateButtonStates();
     }
 
@@ -89,6 +95,10 @@ public class BarterController : MonoBehaviour
     }
 
     public void HandleBarterButton() {
+        if (CurrentOfferIteration == 0) {
+            FirstOffer = CurrentOfferAmount.Value;
+        }
+
         CurrentOfferIteration++;
 
         if (CurrentAction == Action.Selling) {
@@ -103,8 +113,7 @@ public class BarterController : MonoBehaviour
 
             if (CurrentOfferIteration > CurrentNpcModel.AmountOfOffers) {
                 // Too much offer iterations
-                // todo: make seperate texts for this
-                _npcTextField.text = InterpolateText(_wayTooExpensiveDialogs[UnityEngine.Random.Range(0, _wayTooExpensiveDialogs.Length)]);
+                _npcTextField.text = InterpolateText(_tooManyOfferIterationsDialogs[UnityEngine.Random.Range(0, _tooManyOfferIterationsDialogs.Length)]);
                 UserCanInput = false;
 
                 return;
@@ -127,13 +136,23 @@ public class BarterController : MonoBehaviour
             }
 
             // Else we negotiate
-            CurrentOfferAmount += CurrentNpcModel.OfferIncrement;
+            var deltaNegotiation = CurrentOfferAmount.Value - CurrentAcceptAmountByNpc;
+            if (deltaNegotiation > CurrentNpcModel.MaxOfferIncrement) {
+                deltaNegotiation = CurrentNpcModel.MaxOfferIncrement;
+            } else {
+                deltaNegotiation /= 2;
+            }
+
+            CurrentAcceptAmountByNpc += deltaNegotiation;
+            CurrentOfferAmount = CurrentAcceptAmountByNpc;
+
             _npcTextField.text = InterpolateText(_tooExpensiveDialogs[UnityEngine.Random.Range(0, _tooExpensiveDialogs.Length)]);
         }
     }
 
     public void ShowSellDialog(Npc npc) {
         _panelCanvasGroup.gameObject.SetActive(true);
+        FirstOffer = null;
 
         CurrentOfferIteration = 0; // todo: refactor to reset method along with setting currentnpc to null
 
@@ -157,6 +176,8 @@ public class BarterController : MonoBehaviour
         _amountInputField.Select();
 
         _panelCanvasGroup.DOFade(1, .35f);
+
+        UserCanInput = true;
     }
 
     public void FinishDialog(float delay = 0f) {
@@ -181,11 +202,13 @@ public class BarterController : MonoBehaviour
             _decreaseAmountButton.interactable = false;
             _increaseAmountButton.interactable = false;
             _amountInputField.interactable = false;
+
+            return;
         }
 
         _barterButton.interactable = CurrentOfferAmount.HasValue;
         _decreaseAmountButton.interactable = CurrentOfferAmount.Value > 0;
-        _increaseAmountButton.interactable = CurrentOfferAmount.Value < 99999;
+        _increaseAmountButton.interactable = FirstOffer.HasValue ? CurrentOfferAmount.Value < FirstOffer : CurrentOfferAmount.Value < 99999;
         _amountInputField.interactable = true;
     }
 

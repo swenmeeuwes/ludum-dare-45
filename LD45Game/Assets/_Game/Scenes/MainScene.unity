@@ -2696,7 +2696,7 @@ MonoBehaviour:
   _watch: {fileID: 788064541}
   _tutorialController: {fileID: 1228682383}
   _moneyTextField: {fileID: 699735751}
-  _availableTimePerDayInSeconds: 60
+  _availableTimePerDayInSeconds: 300
 --- !u!4 &591166123
 Transform:
   m_ObjectHideFlags: 0
@@ -4714,7 +4714,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8de0133e3bdb3e44bbb23d772d17cf62, type: 3}
+  m_Sprite: {fileID: 21300000, guid: feef7549eeac4a641b4ddbb6c5374c3d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -6145,9 +6145,14 @@ MonoBehaviour:
   - Pff, good luck selling that for %price% coins!
   - '%price% coins for %item%, that is outrageous!'
   - I'll get it somewhere else...
+  _tooManyOfferIterationsDialogs:
+  - I lost interest...
+  - This takes too much effort.
+  - You're too though to barter with.
+  - If you like that %item% so much, just keep it.
   _soldDialogs:
   - Great doing business with you.
-  - I'll add this %item% to my collection.
+  - Great, I'll add this %item% to my collection.
   - Finally, a %item%!
   _itemNameInterpolator: '%item%'
   _priceInterpolator: '%price%'
