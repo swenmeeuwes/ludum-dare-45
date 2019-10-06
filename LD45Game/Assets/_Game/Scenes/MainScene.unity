@@ -2098,6 +2098,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _watch: {fileID: 788064541}
+  _tutorialController: {fileID: 1228682383}
   _moneyTextField: {fileID: 699735751}
 --- !u!4 &591166123
 Transform:
@@ -2958,6 +2959,7 @@ GameObject:
   - component: {fileID: 835893393}
   - component: {fileID: 835893395}
   - component: {fileID: 835893394}
+  - component: {fileID: 835893396}
   m_Layer: 5
   m_Name: Money
   m_TagString: Untagged
@@ -3022,6 +3024,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 835893392}
   m_CullTransparentMesh: 0
+--- !u!225 &835893396
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 835893392}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &898994098
 GameObject:
   m_ObjectHideFlags: 0
@@ -3032,6 +3046,7 @@ GameObject:
   m_Component:
   - component: {fileID: 898994099}
   - component: {fileID: 898994100}
+  - component: {fileID: 898994101}
   m_Layer: 5
   m_Name: StorageSlots
   m_TagString: Untagged
@@ -3087,6 +3102,18 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+--- !u!225 &898994101
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 898994098}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &904438396
 GameObject:
   m_ObjectHideFlags: 0
@@ -3671,6 +3698,9 @@ MonoBehaviour:
   _cat: {fileID: 1732776889}
   _catEyes: {fileID: 82533057}
   _watch: {fileID: 788064541}
+  _moneyDisplay: {fileID: 835893396}
+  _storageSlotsDisplay: {fileID: 898994101}
+  _sellSlotsDisplay: {fileID: 1456035523}
 --- !u!1 &1252635032
 GameObject:
   m_ObjectHideFlags: 0
@@ -4338,6 +4368,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1456035521}
   - component: {fileID: 1456035522}
+  - component: {fileID: 1456035523}
   m_Layer: 5
   m_Name: SellingSlots
   m_TagString: Untagged
@@ -4392,6 +4423,18 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+--- !u!225 &1456035523
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456035520}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &1468977486
 PrefabInstance:
   m_ObjectHideFlags: 0

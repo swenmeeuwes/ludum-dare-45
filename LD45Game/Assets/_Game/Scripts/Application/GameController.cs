@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
     [SerializeField] private Watch _watch;
+    [SerializeField] private TutorialController _tutorialController;
     [SerializeField] private TMP_Text _moneyTextField;
+
+    public static GameController Instance { get; private set; }
 
     private int _money = 0;
     public int Money {
@@ -16,7 +19,11 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    private void Awake() {
+        Instance = this;
+    }
+
     private void Start() {
-        Money = 1;
+        _tutorialController.Play();
     }
 }

@@ -12,23 +12,39 @@ public class TutorialController : MonoBehaviour {
     [SerializeField] private MoveSlightlyToMouse _catEyes;
 
     [SerializeField] private Watch _watch;
+    [SerializeField] private CanvasGroup _moneyDisplay;
+    [SerializeField] private CanvasGroup _storageSlotsDisplay;
+    [SerializeField] private CanvasGroup _sellSlotsDisplay;
 
     private Vector3 _originalCatPosition;
 
+    public bool IsActive { get; set; }
+
     private void Start() {
+        Setup();
+    }
+
+    public void Play() {
+        StartCoroutine(TutorialSequence());
+    }
+
+    private void Setup() {
         _fader.alpha = 0;
         _speechBalloon.alpha = 0;
         _originalCatPosition = _cat.transform.position;
         _catEyes.enabled = false;
 
         _watch.CanvasGroup.alpha = 0;
+        _moneyDisplay.alpha = 0;
+        _storageSlotsDisplay.alpha = 0;
+        _sellSlotsDisplay.alpha = 0;
 
         _cat.transform.position += new Vector3(0, -150, 0);
-
-        StartCoroutine(TutorialSequence());
     }
 
     private IEnumerator TutorialSequence() {
+        IsActive = true;
+
         _fader.DOFade(1, .45f);
         yield return new WaitForSeconds(.45f);
 
@@ -59,6 +75,8 @@ public class TutorialController : MonoBehaviour {
         _speechBalloon.DOFade(0, .45f);
         yield return new WaitForSeconds(.45f);
 
+        // WATCH
+
         _speechBalloonTextField.text = "We can trade as long as it is day.";
         _speechBalloon.DOFade(1, .45f);
         yield return new WaitForSeconds(.45f + 3f);
@@ -80,6 +98,109 @@ public class TutorialController : MonoBehaviour {
 
 
         _speechBalloonTextField.text = "When the moon is at the top we'll take a nap.";
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        // END OF WATCH
+
+        // START OF MONEY
+
+        _speechBalloonTextField.text = "In the top left corner we keep track of the shinies.";
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        _moneyDisplay.DOFade(1, .45f);
+        _moneyDisplay.transform.DOPunchScale(Vector3.one * .1f, .45f);
+
+        yield return new WaitForSeconds(2f);
+
+        _speechBalloonTextField.text = "I'll add the shiny that the kind trader homan gave us.";
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        GameController.Instance.Money++;
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        yield return new WaitForSeconds(2f);
+
+        // END OF MONEY
+
+        // START OF INVENTORY
+
+        _speechBalloonTextField.text = "We'll need a place to store our items.";
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        _speechBalloonTextField.text = "BOOM, storage slots.";
+        _speechBalloon.DOFade(1, .45f);
+        _storageSlotsDisplay.DOFade(1, .45f);
+        _storageSlotsDisplay.transform.DOPunchScale(Vector3.one * .1f, .45f);
+        yield return new WaitForSeconds(.45f + 4f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+
+        _speechBalloonTextField.text = "This storage holds items that are not on display.";
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        _speechBalloonTextField.text = "Because items there aren't sold, we can use this to stockpile items that might increase in price.";
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 5f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        // SELL
+
+        _speechBalloonTextField.text = "Above our storage are the items that are on display.";
+        _speechBalloon.DOFade(1, .45f);
+        _sellSlotsDisplay.DOFade(1, .45f);
+        _sellSlotsDisplay.transform.DOPunchScale(Vector3.one * .1f, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        _speechBalloonTextField.text = "Other homans that walk by might be interested in these items.";
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        _speechBalloonTextField.text = "If they are interested they will barter for the item.";
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        _speechBalloonTextField.text = "When we come to an agreement the item will be sold.";
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        // END OF INVENTORY
+
+        _speechBalloonTextField.text = "Homan, understand?";
         _speechBalloon.DOFade(1, .45f);
         yield return new WaitForSeconds(.45f + 3f);
 
@@ -108,5 +229,7 @@ public class TutorialController : MonoBehaviour {
         yield return new WaitForSeconds(.55f);
 
         _fader.DOFade(0, .35f);
+
+        IsActive = false;
     }
 }
