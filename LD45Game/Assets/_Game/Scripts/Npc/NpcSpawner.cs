@@ -21,6 +21,7 @@ public class NpcSpawner : MonoBehaviour {
         DOTween.Sequence()
             .Append(npc.transform.DOMove(_npcTarget.position, 2.5f))
             .AppendInterval(2f)
-            .Append(npc.transform.DOMove(_npcLeave.position, 2.5f));
+            .Append(npc.transform.DOMove(_npcLeave.position, 2.5f))
+            .AppendCallback(() => { Destroy(npc.gameObject); });
     }
 }
