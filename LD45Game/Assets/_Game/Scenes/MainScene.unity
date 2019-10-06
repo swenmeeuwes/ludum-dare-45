@@ -6124,6 +6124,7 @@ MonoBehaviour:
   _increaseAmountButton: {fileID: 1497249352}
   _decreaseAmountButton: {fileID: 711288630}
   _barterButton: {fileID: 415550047}
+  _barterButtonTextField: {fileID: 378611087}
   _closeButton: {fileID: 1117535556}
   _itemImage: {fileID: 961639968}
   _npcImage: {fileID: 1159050837}
@@ -7468,6 +7469,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CatSpeechCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 2439907850830106727, guid: 61d8ba0ad73cf9846ad972682e611a10,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2439907850830106723, guid: 61d8ba0ad73cf9846ad972682e611a10,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7571,6 +7577,41 @@ PrefabInstance:
     - target: {fileID: 2439907850830106723, guid: 61d8ba0ad73cf9846ad972682e611a10,
         type: 3}
       propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2439907851089686065, guid: 61d8ba0ad73cf9846ad972682e611a10,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2439907851089686065, guid: 61d8ba0ad73cf9846ad972682e611a10,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2439907849871062549, guid: 61d8ba0ad73cf9846ad972682e611a10,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2439907849871062549, guid: 61d8ba0ad73cf9846ad972682e611a10,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2439907849871062549, guid: 61d8ba0ad73cf9846ad972682e611a10,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2439907849871062549, guid: 61d8ba0ad73cf9846ad972682e611a10,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2439907849871062549, guid: 61d8ba0ad73cf9846ad972682e611a10,
+        type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -43,9 +44,41 @@ public class GameController : MonoBehaviour {
 
         yield return new WaitUntil(() => !_tutorialController.IsActive);
 
-        _watch.Run(_availableTimePerDayInSeconds);
-
         yield return new WaitForSeconds(1.5f);
+
+        StartDay();
+    }
+
+    private void StartDay() {
+        _watch.Begin(_availableTimePerDayInSeconds);
+
+        SpawnNpc();
+    }
+
+    public void OnNpcLeave(Npc npc) {
+        if (_watch.DayIsOver) {
+            Debug.Log("Day is over!");
+            return;
+        }
+
+        var showHint = Random.value > .6f;
+        if (showHint) {
+            DOTween.Sequence()
+               .SetDelay(.85f)
+               .OnComplete(() => {
+                   // todo: decide if filler or actual tip
+                   HintController.Instance.ShowFiller();
+               });
+        }
+
+        DOTween.Sequence()
+               .SetDelay(showHint ? 2.5f : 0)
+               .OnComplete(() => {
+                   SpawnNpc();
+               });
+    }
+
+    private void SpawnNpc() {
         NpcSpawner.Instance.Spawn(new NpcModel {
             NpcType = Npc.Type.Buying,
             WantedItem = ItemData.Type.Sword,

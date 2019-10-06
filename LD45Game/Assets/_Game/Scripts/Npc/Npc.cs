@@ -62,6 +62,8 @@ public class Npc : MonoBehaviour
     }
 
     private void Leave() {
+        GameController.Instance.OnNpcLeave(this);
+
         DOTween.Sequence()
             .Append(transform.DOMove(LeaveWaypoint.position, 2.5f))
             .AppendCallback(() => { Destroy(gameObject); });

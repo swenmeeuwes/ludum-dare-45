@@ -14,19 +14,27 @@ public class Watch : MonoBehaviour {
 
     public CanvasGroup CanvasGroup { get { return _canvasGroup; } }
 
+    public bool DayIsOver { get; set; }
+
     private void Start() {
         Reset();
     }
 
     private void Reset() {
+        DayIsOver = false;
         _nightFader.alpha = 0;
         _content.rotation = Quaternion.AngleAxis(_startAngle, Vector3.forward);
     }
 
-    public void Run(float availableTimeInSeconds) {
+    public void Begin(float availableTimeInSeconds) {
         Reset();
-        
-        _content.DORotate(new Vector3(0, 0, _endAngle), availableTimeInSeconds, RotateMode.FastBeyond360);
-        _nightFader.DOFade(_nightFaderOpacityTarget / 255f, availableTimeInSeconds * 0.66f).SetDelay(availableTimeInSeconds * 0.33f);
+
+        _nightFader
+            .DOFade(_nightFaderOpacityTarget / 255f, availableTimeInSeconds * 0.66f)
+            .SetDelay(availableTimeInSeconds * 0.33f);
+        _content
+            .DORotate(new Vector3(0, 0, _endAngle), availableTimeInSeconds, RotateMode.FastBeyond360)
+            .SetEase(Ease.Linear)
+            .OnComplete(() => { DayIsOver = true; });
     }
 }

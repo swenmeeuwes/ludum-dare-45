@@ -13,6 +13,7 @@ public class BarterController : MonoBehaviour
     [SerializeField] private Button _increaseAmountButton;
     [SerializeField] private Button _decreaseAmountButton;
     [SerializeField] private Button _barterButton;
+    [SerializeField] private TMP_Text _barterButtonTextField;
     [SerializeField] private Button _closeButton;
     [SerializeField] private Image _itemImage;
     [SerializeField] private Image _npcImage;
@@ -102,6 +103,22 @@ public class BarterController : MonoBehaviour
         CurrentOfferIteration++;
 
         if (CurrentAction == Action.Selling) {
+            if (CurrentOfferAmount <= CurrentAcceptAmountByNpc) {
+                // We have a deal!
+                _npcTextField.text = InterpolateText(_soldDialogs[UnityEngine.Random.Range(0, _soldDialogs.Length)]);
+
+                var sellSuccess = Inventory.Instance.SellItem(CurrentItemData.type);
+                if (sellSuccess) {
+                    GameController.Instance.Money += CurrentOfferAmount.Value;
+                } else {
+                    _npcTextField.text = InterpolateText("Where did the %item% go? You cannot just simply remove items from your display that you are selling!");
+                }
+
+                UserCanInput = false;
+
+                return;
+            }
+
             if (CurrentOfferAmount > CurrentNpcModel.AmountThresholdForLeaving) {
                 // Too cheap/ expensive -> leaving instantly
                 _npcTextField.text = InterpolateText(_wayTooExpensiveDialogs[UnityEngine.Random.Range(0, _wayTooExpensiveDialogs.Length)]);
@@ -114,22 +131,6 @@ public class BarterController : MonoBehaviour
             if (CurrentOfferIteration > CurrentNpcModel.AmountOfOffers) {
                 // Too much offer iterations
                 _npcTextField.text = InterpolateText(_tooManyOfferIterationsDialogs[UnityEngine.Random.Range(0, _tooManyOfferIterationsDialogs.Length)]);
-                UserCanInput = false;
-
-                return;
-            }
-
-            if (CurrentOfferAmount <= CurrentAcceptAmountByNpc) {
-                // We have a deal!
-                _npcTextField.text = InterpolateText(_soldDialogs[UnityEngine.Random.Range(0, _soldDialogs.Length)]);
-
-                var sellSuccess = Inventory.Instance.SellItem(CurrentItemData.type);
-                if (sellSuccess) {
-                    GameController.Instance.Money += CurrentOfferAmount.Value;
-                } else {
-                    _npcTextField.text = InterpolateText("Where did the %item% go? You cannot just simply remove items from your display that you are selling!");
-                }
-
                 UserCanInput = false;
 
                 return;
@@ -197,6 +198,9 @@ public class BarterController : MonoBehaviour
     }
 
     private void UpdateButtonStates() {
+        _barterButtonTextField.text = CurrentOfferAmount == CurrentAcceptAmountByNpc ?
+            (CurrentAction == Action.Selling ? "Sell" : "Buy") : "Barter";
+
         if (!UserCanInput) {
             _barterButton.interactable = false;
             _decreaseAmountButton.interactable = false;

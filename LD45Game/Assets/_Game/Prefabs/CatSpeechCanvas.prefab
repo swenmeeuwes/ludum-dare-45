@@ -33,10 +33,10 @@ RectTransform:
   m_Father: {fileID: 2439907851089686065}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 413.625, y: -64.505005}
-  m_SizeDelta: {x: 779.25, y: 81.01001}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 779.25, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2439907849871062550
 CanvasRenderer:
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4280229663
+    rgba: 4280821800
   m_fontColor: {r: 0.16037738, g: 0.16037738, b: 0.16037738, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -191,13 +191,14 @@ GameObject:
   - component: {fileID: 2439907850830106720}
   - component: {fileID: 2439907850830106721}
   - component: {fileID: 2439907850830106726}
+  - component: {fileID: 3184076459193402625}
   m_Layer: 5
   m_Name: CatSpeechCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2439907850830106723
 RectTransform:
   m_ObjectHideFlags: 0
@@ -279,6 +280,34 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &3184076459193402625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2439907850830106727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66ffba0d5c4b7e342b36071022bcafea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cat: {fileID: 2439907851208973746}
+  _catEyes: {fileID: 2439907851190532731}
+  _speechBalloon: {fileID: 2439907851089686064}
+  _speechBalloonTextField: {fileID: 2439907849871062551}
+  _fillerDialogs:
+  - I can't spell, I'm a cat!
+  - I've yet to reveal the mystery of the red dot.
+  - You can only pet my belly thrice or I'll attack.
+  - Seeing you is the best part of my day.
+  - And that is how we will overthrow the human tyranny! Wait... You were listening?
+  - Cat, I'm a kitty cat, and I dance dance dance, and I dance dance dance.
+  - Can cats have human pets too?
+  - I like sushi.
+  - It's ok to be yourself.
+  - I believe in you.
+  - Can I get a kappa in the chat?
 --- !u!1 &2439907851089686070
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,7 +347,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -430.37506, y: 231.85004}
-  m_SizeDelta: {x: 827.25, y: 153.01001}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &2439907851089686076
 CanvasRenderer:
