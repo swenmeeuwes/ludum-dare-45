@@ -6767,7 +6767,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 1842412736}
   _animationTriggerVar: Idle
-  _intervalRange: {x: 6, y: 14}
+  _intervalRange: {x: 2, y: 8}
 --- !u!1 &1958922564
 GameObject:
   m_ObjectHideFlags: 0

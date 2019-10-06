@@ -16,13 +16,17 @@ public class NpcSpawner : MonoBehaviour {
         Instance = this;
     }
 
-    public void Spawn(NpcModel npcModel) {
+    public Npc Spawn(NpcModel npcModel, bool activateInstantly = true) {
         var npc = Instantiate(_npcPrefab);
         npc.transform.position = _spawnPoint.transform.position;
         npc.Model = npcModel;
         npc.ShopWaypoint = _npcTarget;
         npc.LeaveWaypoint = _npcLeave;
 
-        npc.Activate();
+        if (activateInstantly) {
+            npc.Activate();
+        }
+
+        return npc;
     }
 }
