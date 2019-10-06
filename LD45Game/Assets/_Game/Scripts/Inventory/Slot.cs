@@ -1,24 +1,15 @@
 ﻿using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Slot : MonoBehaviour, IDropHandler {
     public bool IsFilled {
         get {
-            return transform.childCount > 0;
+            return transform.childCount > 0 || Content != null;
         }
     }
 
-    public Transform Content {
-        get {
-            if (transform.childCount > 0) {
-                return transform.GetChild(0);
-            }
-            return null;
-        }
-    }
+    public Item Content { get; private set; }
 
     public void Add(Item item) {
         item.transform.SetParent(transform);
@@ -43,11 +34,11 @@ public class Slot : MonoBehaviour, IDropHandler {
     }
 
     public virtual void OnAddContent(Draggable draggable) {
-
+        Content = draggable.GetComponent<Item>();
     }
 
     public virtual void OnRemoveContent(Draggable draggable) {
-
+        Content = null;
     }
 
     public virtual void Detach(Draggable draggable) {

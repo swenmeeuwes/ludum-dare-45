@@ -10,11 +10,13 @@ public class NpcSpawner : MonoBehaviour {
 
     [SerializeField] private GameObject _npcPrefab;
 
-    private void Start() {
-        Spawn();
+    public static NpcSpawner Instance { get; private set; }
+
+    private void Awake() {
+        Instance = this;
     }
 
-    private void Spawn() {
+    public void Spawn() {
         var npc = Instantiate(_npcPrefab);
         npc.transform.position = _spawnPoint.transform.position;
 

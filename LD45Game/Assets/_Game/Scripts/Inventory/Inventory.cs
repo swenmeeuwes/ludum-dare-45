@@ -18,6 +18,10 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public IEnumerable<Item> ItemsOnDisplay {
+        get { return _sellSlots.Where(s => s.IsFilled).Select(s => s.Content); }
+    }
+
     private void Start() {
         Initialize();
     }
