@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class ItemFactory : MonoBehaviour
 {
+    [SerializeField] private Transform _itemContainer;
     [SerializeField] private Item _itemPrototype;
     [SerializeField] private ItemMap[] _itemMapping;
 
@@ -26,6 +27,7 @@ public class ItemFactory : MonoBehaviour
 
     public Item CreateFromData(ItemData data) {
         var item = Instantiate(_itemPrototype);
+        item.SetContainer(_itemContainer);
 
         item.Image.sprite = data.sprite;
 

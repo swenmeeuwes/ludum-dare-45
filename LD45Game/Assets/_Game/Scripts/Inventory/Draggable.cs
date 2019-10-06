@@ -12,15 +12,26 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     private bool _wasOverDropTargetPreviously = false;
     private Tween _currentTween;
 
-    private Transform _originalParent;
+    public Slot CurrentSlot { get; set; }
+
+    private Transform _container;
 
     private void Start() {
-        _originalParent = transform.parent;
         _canvasGroup = GetComponent<CanvasGroup>();
     }
 
-    public void SetParentToOriginalParent() {
-        transform.SetParent(_originalParent);
+    public void SetContainer(Transform container) {
+        _container = container;
+    }
+
+    public void ParentToContainer() {
+        transform.SetParent(_container);
+    }
+
+    public void MoveBackToParent() {
+        transform.SetParent(CurrentSlot.transform, false);
+        transform.position = transform.parent.position;
+        //transform.DOMove(transform.parent.position, .35f);
     }
 
     public void OnBeginDrag(PointerEventData eventData) {
@@ -30,6 +41,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         }
 
         _canvasGroup.blocksRaycasts = false;
+        _wasOverDropTargetPreviously = false;
 
         transform.DOScale(1f, .15f);
     }
@@ -41,7 +53,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         var hoveringAboveDropTarget = slot != null;
 
         if (!_wasOverDropTargetPreviously && hoveringAboveDropTarget) {
-            _currentTween = transform.DOScale(1.1f, .45f).SetLoops(-1, LoopType.Yoyo);
+            _currentTween = transform.DOScale(1.2f, .45f).SetLoops(-1, LoopType.Yoyo);
         } else if (_wasOverDropTargetPreviously && !hoveringAboveDropTarget) {
             _currentTween.Kill();
             _currentTween = null;
@@ -59,5 +71,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             _currentTween = null;
             transform.DOScale(1f, .15f);
         }
+
+        MoveBackToParent();
     }
 }

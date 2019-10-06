@@ -107,7 +107,7 @@ public class TutorialController : MonoBehaviour {
         _speechBalloon.DOFade(0, .45f);
         yield return new WaitForSeconds(.45f);
 
-        _speechBalloonTextField.text = "Wasn't me!";
+        _speechBalloonTextField.text = "Those aren't mine!";
         _speechBalloon.DOFade(1, .45f);
         yield return new WaitForSeconds(.45f + 3f);
 
@@ -204,11 +204,11 @@ public class TutorialController : MonoBehaviour {
 
         // SELL
 
-        _speechBalloonTextField.text = "Above our storage are the items that are on display.";
+        _speechBalloonTextField.text = "Above our storage are the items that are on display and will be sold.";
         _speechBalloon.DOFade(1, .45f);
         _sellSlotsDisplay.DOFade(1, .45f);
         _sellSlotsDisplay.transform.DOPunchScale(Vector3.one * .1f, .45f);
-        yield return new WaitForSeconds(.45f + 3f);
+        yield return new WaitForSeconds(.45f + 4f);
 
         _speechBalloon.DOFade(0, .45f);
         yield return new WaitForSeconds(.45f);
@@ -236,10 +236,18 @@ public class TutorialController : MonoBehaviour {
 
         _speechBalloonTextField.text = "Try displaying the item in our storage.";
         _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        _speechBalloonTextField.text = "List the item for sale by dragging the item from the storage to display slot.";
+        _speechBalloon.DOFade(1, .45f);
         yield return new WaitUntil(() => _inventory.ItemsOnDisplay.Count() > 0);
 
         _speechBalloon.DOFade(0, .45f);
         yield return new WaitForSeconds(.45f);
+        
 
         _speechBalloonTextField.text = "Great work!";
         _speechBalloon.DOFade(1, .45f);
@@ -264,7 +272,7 @@ public class TutorialController : MonoBehaviour {
         _speechBalloon.DOFade(0, .45f);
         yield return new WaitForSeconds(.45f);
 
-        _speechBalloonTextField.text = "HOMAN, there is a client!";
+        _speechBalloonTextField.text = "HOMAN, there comes a client!";
         _speechBalloon.DOFade(1, .45f);
         yield return new WaitForSeconds(.45f + 3f);
 

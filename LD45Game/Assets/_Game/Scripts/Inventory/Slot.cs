@@ -9,10 +9,19 @@ public class Slot : MonoBehaviour, IDropHandler {
         }
     }
 
-    public Item Content { get; private set; }
+    public Item Content { get; set; }
+
+    //public Item Content {
+    //    get {
+    //        if (!IsFilled) {
+    //            return null;
+    //        }
+    //        return transform.GetChild(0).GetComponent<Item>();
+    //    }
+    //}
 
     public void Add(Item item) {
-        item.transform.SetParent(transform);
+        item.transform.SetParent(transform, false);
         item.transform.position = transform.position;
         item.transform.DOScaleX(transform.localScale.x, .25f);
         item.transform.DOScaleY(transform.localScale.y, .25f);
@@ -24,17 +33,26 @@ public class Slot : MonoBehaviour, IDropHandler {
         var rect = transform as RectTransform;
         var selectedObject = eventData.pointerDrag;
 
+        if (IsFilled && transform.GetChild(0).transform == selectedObject.transform) {
+            // Draggable is already in this slot
+            return;
+        }
+
         if (IsFilled) {
+            Debug.Log("Slot is already filled with another item.");
             return;
         }
 
         if (RectTransformUtility.RectangleContainsScreenPoint(rect, Input.mousePosition)) {
             Add(selectedObject.GetComponent<Item>());
+        } else {
+            selectedObject.GetComponent<Draggable>().MoveBackToParent();
         }
     }
 
     public virtual void OnAddContent(Draggable draggable) {
         Content = draggable.GetComponent<Item>();
+        draggable.CurrentSlot = this;
     }
 
     public virtual void OnRemoveContent(Draggable draggable) {
@@ -42,7 +60,8 @@ public class Slot : MonoBehaviour, IDropHandler {
     }
 
     public virtual void Detach(Draggable draggable) {
-        draggable.SetParentToOriginalParent();
+        draggable.ParentToContainer();
+        draggable.transform.SetAsLastSibling();
 
         OnRemoveContent(draggable);
     }

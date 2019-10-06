@@ -99,7 +99,7 @@ public class IntroductionController : MonoBehaviour {
         DOTween.Sequence()
             .Append(_storyTextField.DOFade(0, .25f))
             .AppendInterval(.45f)
-            .AppendCallback(() => { _storyTextField.text = "In front of the cat stood a travelling merchant wearing a large coat"; })
+            .AppendCallback(() => { _storyTextField.text = "In front of the cat stood a traveling merchant wearing a large coat"; })
             .Append(_storyTextField.DOFade(1, .45f));
         yield return new WaitForSeconds(.65f);
         _instructionTextField.DOFade(1, .15f);
@@ -162,7 +162,7 @@ public class IntroductionController : MonoBehaviour {
         _coin.gravityScale = 2;
         _coin.AddTorque(45000f);
 
-        yield return new WaitForSeconds(9f);
+        yield return new WaitForSeconds(7f);
 
         _fader.DOFade(1, 2.45f);
 

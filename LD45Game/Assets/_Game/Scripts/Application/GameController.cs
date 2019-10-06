@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour {
     [SerializeField] private Watch _watch;
     [SerializeField] private TutorialController _tutorialController;
     [SerializeField] private TMP_Text _moneyTextField;
+    [SerializeField] private int _availableTimePerDayInSeconds;
 
     public static GameController Instance { get; private set; }
 
@@ -24,6 +25,17 @@ public class GameController : MonoBehaviour {
     }
 
     private void Start() {
+        StartCoroutine(TutorialSequence());
+    }
+
+    private IEnumerator TutorialSequence() {
         _tutorialController.Play();
+
+        yield return new WaitUntil(() => !_tutorialController.IsActive);
+
+        _watch.Run(_availableTimePerDayInSeconds);
+
+        yield return new WaitForSeconds(1.5f);
+        NpcSpawner.Instance.Spawn();
     }
 }
