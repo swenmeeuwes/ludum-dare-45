@@ -20,6 +20,9 @@ public class TutorialController : MonoBehaviour {
 
     [SerializeField] private ItemData _itemAddedByTutorial;
 
+    private bool _moneyWasAwarded = false;
+    private bool _tutorialItemWasAwarded = false;
+
     private Vector3 _originalCatPosition;
 
     public bool IsActive { get; set; }
@@ -43,7 +46,35 @@ public class TutorialController : MonoBehaviour {
         _storageSlotsDisplay.alpha = 0;
         _sellSlotsDisplay.alpha = 0;
 
-        _cat.transform.position += new Vector3(0, -150, 0);
+        _cat.transform.position += new Vector3(0, -250, 0);
+    }
+
+    public void Skip() {
+        _fader.DOFade(0, .25f);
+        _speechBalloon.DOFade(0, .25f);
+        _originalCatPosition = _cat.transform.position;
+        _catEyes.enabled = false;
+
+        _watch.CanvasGroup.DOFade(1, .35f);
+        _moneyDisplay.DOFade(1, .35f);
+        _storageSlotsDisplay.DOFade(1, .35f);
+        _sellSlotsDisplay.DOFade(1, .35f);
+
+        _cat.transform.position = _originalCatPosition + new Vector3(0, -250, 0);
+
+        if (!_tutorialItemWasAwarded) {
+            var tutorialItem = ItemFactory.Instance.CreateFromData(_itemAddedByTutorial);
+            _inventory.AddItem(tutorialItem);
+            _tutorialItemWasAwarded = true;
+        }
+
+        if (!_moneyWasAwarded) {
+            GameController.Instance.Money++;
+            _moneyWasAwarded = true;
+        }
+
+        StopAllCoroutines();
+        IsActive = false;
     }
 
     private IEnumerator TutorialSequence() {
@@ -142,6 +173,7 @@ public class TutorialController : MonoBehaviour {
         yield return new WaitForSeconds(.45f + 4f);
 
         GameController.Instance.Money++;
+        _moneyWasAwarded = true;
 
         _speechBalloon.DOFade(0, .45f);
         yield return new WaitForSeconds(.45f);
@@ -192,6 +224,7 @@ public class TutorialController : MonoBehaviour {
 
         var tutorialItem = ItemFactory.Instance.CreateFromData(_itemAddedByTutorial);
         _inventory.AddItem(tutorialItem);
+        _tutorialItemWasAwarded = true;
 
         yield return new WaitForSeconds(2f);
 
@@ -282,7 +315,7 @@ public class TutorialController : MonoBehaviour {
         yield return new WaitForSeconds(1f);
 
         _catEyes.enabled = false;
-        _cat.DOMove(_cat.transform.position + new Vector3(0, -150, 0), .45f);
+        _cat.DOMove(_cat.transform.position + new Vector3(0, -250, 0), .45f);
 
         yield return new WaitForSeconds(.55f);
 

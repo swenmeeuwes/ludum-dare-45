@@ -8,7 +8,7 @@ public class NpcSpawner : MonoBehaviour {
     [SerializeField] private Transform _npcTarget;
     [SerializeField] private Transform _npcLeave;
 
-    [SerializeField] private GameObject _npcPrefab;
+    [SerializeField] private Npc _npcPrefab;
 
     public static NpcSpawner Instance { get; private set; }
 
@@ -16,14 +16,13 @@ public class NpcSpawner : MonoBehaviour {
         Instance = this;
     }
 
-    public void Spawn() {
+    public void Spawn(NpcModel npcModel) {
         var npc = Instantiate(_npcPrefab);
         npc.transform.position = _spawnPoint.transform.position;
+        npc.Model = npcModel;
+        npc.ShopWaypoint = _npcTarget;
+        npc.LeaveWaypoint = _npcLeave;
 
-        DOTween.Sequence()
-            .Append(npc.transform.DOMove(_npcTarget.position, 2.5f))
-            .AppendInterval(2f)
-            .Append(npc.transform.DOMove(_npcLeave.position, 2.5f))
-            .AppendCallback(() => { Destroy(npc.gameObject); });
+        npc.Activate();
     }
 }

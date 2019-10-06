@@ -39,6 +39,25 @@ public class ItemFactory : MonoBehaviour
         return item;
     }
 
+    public ItemData GetDataFor(ItemData.Type itemType) {
+        var itemMap = _itemMapping.FirstOrDefault(m => m.type == itemType);
+        if (itemMap == null) {
+            return null;
+        }
+
+        return itemMap.data;
+    }
+
+    public Sprite GetSpriteFor(ItemData.Type itemType) {
+        var itemMap = _itemMapping.FirstOrDefault(m => m.type == itemType);
+        if (itemMap == null) {
+            return null;
+        }
+
+        return itemMap.data.sprite;
+    }
+
+    [Serializable]
     public class ItemMap {
         public ItemData.Type type;
         public ItemData data;

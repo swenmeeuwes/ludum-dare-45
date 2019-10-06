@@ -138,7 +138,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 50
   m_TargetDisplay: 0
 --- !u!114 &1002115172605108534
 MonoBehaviour:
@@ -189,6 +189,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3654557524619028017}
   - component: {fileID: 8326420185052314296}
+  - component: {fileID: 3391295802115354993}
   m_Layer: 0
   m_Name: ThoughtBalloon
   m_TagString: Untagged
@@ -250,7 +251,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 22
   m_Sprite: {fileID: 21300000, guid: 20448abe5e1b2894c80191387b211c00, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9056604, g: 0.9056604, b: 0.9056604, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 1
@@ -260,6 +261,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!225 &3391295802115354993
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2719500781995770496}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3287857571189320679
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,7 +338,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 0}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -343,8 +356,9 @@ GameObject:
   m_Component:
   - component: {fileID: 721571109438506740}
   - component: {fileID: 3857013283964436840}
+  - component: {fileID: 3760525301042325074}
   m_Layer: 0
-  m_Name: HumanMan
+  m_Name: Npc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -386,6 +400,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &3760525301042325074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5711704745924785281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06bf02a634ebf2c42889704586064745, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _thoughCloud: {fileID: 8326420185052314296}
+  _thoughCloudCanvasGroup: {fileID: 3391295802115354993}
+  _thoughCloudImage: {fileID: 7725253917313114334}
 --- !u!1 &7670972278586166521
 GameObject:
   m_ObjectHideFlags: 0

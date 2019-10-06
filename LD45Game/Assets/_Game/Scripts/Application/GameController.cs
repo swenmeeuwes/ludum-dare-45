@@ -28,6 +28,16 @@ public class GameController : MonoBehaviour {
         StartCoroutine(TutorialSequence());
     }
 
+    private void Update() {
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            if (_tutorialController.IsActive) {
+                _tutorialController.Skip();
+            }
+        }
+#endif
+    }
+
     private IEnumerator TutorialSequence() {
         _tutorialController.Play();
 
@@ -36,6 +46,8 @@ public class GameController : MonoBehaviour {
         _watch.Run(_availableTimePerDayInSeconds);
 
         yield return new WaitForSeconds(1.5f);
-        NpcSpawner.Instance.Spawn();
+        NpcSpawner.Instance.Spawn(new NpcModel {
+            WantedItem = ItemData.Type.Sword
+        });
     }
 }
