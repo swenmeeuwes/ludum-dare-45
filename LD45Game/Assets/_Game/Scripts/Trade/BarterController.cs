@@ -37,7 +37,7 @@ public class BarterController : MonoBehaviour
     public ItemData CurrentItemData { get; private set; }
     public int CurrentOfferIteration { get; private set; }
     public int CurrentAcceptAmountByNpc { get; private set; }
-    public int? FirstOffer { get; private set; }
+    public int? PreviousOffer { get; private set; }
 
     private bool _userCanInput;
     public bool UserCanInput {
@@ -76,8 +76,8 @@ public class BarterController : MonoBehaviour
             CurrentOfferAmount = 0;
         }
 
-        if (FirstOffer.HasValue && CurrentOfferAmount > FirstOffer) {
-            CurrentOfferAmount = FirstOffer;
+        if (PreviousOffer.HasValue && CurrentOfferAmount > PreviousOffer) {
+            CurrentOfferAmount = PreviousOffer;
         }
 
         UpdateButtonStates();
@@ -96,9 +96,7 @@ public class BarterController : MonoBehaviour
     }
 
     public void HandleBarterButton() {
-        if (CurrentOfferIteration == 0) {
-            FirstOffer = CurrentOfferAmount.Value;
-        }
+        PreviousOffer = CurrentOfferAmount.Value;
 
         CurrentOfferIteration++;
 
@@ -153,7 +151,7 @@ public class BarterController : MonoBehaviour
 
     public void ShowSellDialog(Npc npc) {
         _panelCanvasGroup.gameObject.SetActive(true);
-        FirstOffer = null;
+        PreviousOffer = null;
 
         CurrentOfferIteration = 0; // todo: refactor to reset method along with setting currentnpc to null
 
@@ -212,7 +210,7 @@ public class BarterController : MonoBehaviour
 
         _barterButton.interactable = CurrentOfferAmount.HasValue;
         _decreaseAmountButton.interactable = CurrentOfferAmount.Value > 0;
-        _increaseAmountButton.interactable = FirstOffer.HasValue ? CurrentOfferAmount.Value < FirstOffer : CurrentOfferAmount.Value < 99999;
+        _increaseAmountButton.interactable = PreviousOffer.HasValue ? CurrentOfferAmount.Value < PreviousOffer : CurrentOfferAmount.Value < 99999;
         _amountInputField.interactable = true;
     }
 
