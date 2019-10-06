@@ -305,7 +305,7 @@ public class TutorialController : MonoBehaviour {
         _speechBalloon.DOFade(0, .45f);
         yield return new WaitForSeconds(.45f);
 
-        _speechBalloonTextField.text = "HOMAN, there comes a client!";
+        _speechBalloonTextField.text = "HOMAN, here comes a client!";
         _speechBalloon.DOFade(1, .45f);
         yield return new WaitForSeconds(.45f + 3f);
 

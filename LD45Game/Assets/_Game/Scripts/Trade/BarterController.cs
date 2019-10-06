@@ -13,14 +13,39 @@ public class BarterController : MonoBehaviour
     [SerializeField] private Button _increaseAmountButton;
     [SerializeField] private Button _decreaseAmountButton;
     [SerializeField] private Button _barterButton;
+    [SerializeField] private Button _closeButton;
     [SerializeField] private Image _itemImage;
     [SerializeField] private Image _npcImage;
     [SerializeField] private TMP_Text _npcTextField;
     [SerializeField] private TMP_Text _actionTextField;
 
+    [SerializeField] private string[] _sellingDialogs;
+    [SerializeField] private string[] _tooExpensiveDialogs;
+    [SerializeField] private string[] _wayTooExpensiveDialogs;
+    [SerializeField] private string[] _soldDialogs;
+    [SerializeField] private string _itemNameInterpolator = "%item%";
+    [SerializeField] private string _priceInterpolator = "%price%";
+    [SerializeField] private string _newPriceInterpolator = "%newprice%";
+
     public static BarterController Instance { get; private set; }
 
-    public int? CurrentAmount {
+    public Action CurrentAction { get; private set; }
+    public Npc CurrentNpc { get; private set; }
+    public NpcModel CurrentNpcModel { get; private set; }
+    public ItemData CurrentItemData { get; private set; }
+    public int CurrentOfferIteration { get; private set; }
+    public int CurrentAcceptAmountByNpc { get; private set; }
+
+    private bool _userCanInput;
+    public bool UserCanInput {
+        get { return _userCanInput; }
+        set {
+            _userCanInput = value;
+            UpdateButtonStates();
+        }
+    }
+
+    public int? CurrentOfferAmount {
         get {
             try {
                 return int.Parse(_amountInputField.text);
@@ -39,48 +64,133 @@ public class BarterController : MonoBehaviour
 
     private void Start() {
         _panelCanvasGroup.alpha = 0;
-        CurrentAmount = 0;
+        CurrentOfferAmount = 0;
+
+        _panelCanvasGroup.gameObject.SetActive(false);
     }
-
     public void OnInputAmountValueChange() {
-        if (!CurrentAmount.HasValue) {
-            _barterButton.interactable = false;
-            return;
+        if (CurrentOfferAmount < 0) {
+            CurrentOfferAmount = 0;
         }
 
-        if (CurrentAmount < 0) {
-            CurrentAmount = 0;
-        }
-
-        _decreaseAmountButton.interactable = CurrentAmount.Value > 0;
+        UpdateButtonStates();
     }
 
     public void HandleIncreaseAmountButton() {
-        if (CurrentAmount.HasValue) {
-            CurrentAmount++;
+        if (CurrentOfferAmount.HasValue) {
+            CurrentOfferAmount++;
         }
     }
 
     public void HandleDecreaseAmountButton() {
-        if (CurrentAmount.HasValue) {
-            CurrentAmount--;
+        if (CurrentOfferAmount.HasValue) {
+            CurrentOfferAmount--;
         }
     }
 
     public void HandleBarterButton() {
+        CurrentOfferIteration++;
 
+        if (CurrentAction == Action.Selling) {
+            if (CurrentOfferAmount > CurrentNpcModel.AmountThresholdForLeaving) {
+                // Too cheap/ expensive -> leaving instantly
+                _npcTextField.text = InterpolateText(_wayTooExpensiveDialogs[UnityEngine.Random.Range(0, _wayTooExpensiveDialogs.Length)]);
+                UserCanInput = false;
+
+                // FinishDialog(3f); // Disabled automatic popup closing for now, user should press the 'X' button (gives the users time to read)
+                return;
+            }
+
+            if (CurrentOfferIteration > CurrentNpcModel.AmountOfOffers) {
+                // Too much offer iterations
+                // todo: make seperate texts for this
+                _npcTextField.text = InterpolateText(_wayTooExpensiveDialogs[UnityEngine.Random.Range(0, _wayTooExpensiveDialogs.Length)]);
+                UserCanInput = false;
+
+                return;
+            }
+
+            if (CurrentOfferAmount <= CurrentAcceptAmountByNpc) {
+                // We have a deal!
+                _npcTextField.text = InterpolateText(_soldDialogs[UnityEngine.Random.Range(0, _soldDialogs.Length)]);
+
+                var sellSuccess = Inventory.Instance.SellItem(CurrentItemData.type);
+                if (sellSuccess) {
+                    GameController.Instance.Money += CurrentOfferAmount.Value;
+                } else {
+                    _npcTextField.text = InterpolateText("Where did the %item% go? You cannot just simply remove items from your display that you are selling!");
+                }
+
+                UserCanInput = false;
+
+                return;
+            }
+
+            // Else we negotiate
+            CurrentOfferAmount += CurrentNpcModel.OfferIncrement;
+            _npcTextField.text = InterpolateText(_tooExpensiveDialogs[UnityEngine.Random.Range(0, _tooExpensiveDialogs.Length)]);
+        }
     }
 
-    public void ShowSellDialog(ItemData.Type itemType) {
-        ShowSellDialog(ItemFactory.Instance.GetDataFor(itemType));
-    }
+    public void ShowSellDialog(Npc npc) {
+        _panelCanvasGroup.gameObject.SetActive(true);
 
-    public void ShowSellDialog(ItemData itemData) {
+        CurrentOfferIteration = 0; // todo: refactor to reset method along with setting currentnpc to null
+
+        CurrentAction = Action.Selling;
+        CurrentNpc = npc;
+        CurrentNpcModel = npc.Model;
+
+        CurrentAcceptAmountByNpc = CurrentNpcModel.InitialOfferAmount;
+        CurrentOfferAmount = CurrentNpcModel.InitialOfferAmount;
+
+        CurrentItemData = ItemFactory.Instance.GetDataFor(CurrentNpcModel.WantedItem);
+        CurrentOfferAmount = CurrentNpcModel.InitialOfferAmount;
+
         _actionTextField.text = "Selling";
-        _itemImage.sprite = itemData.sprite;
+        _itemImage.sprite = CurrentItemData.sprite;
+
+        var npcText = InterpolateText(_sellingDialogs[UnityEngine.Random.Range(0, _sellingDialogs.Length)]);
+
+        _npcTextField.text = npcText;
 
         _amountInputField.Select();
 
         _panelCanvasGroup.DOFade(1, .35f);
+    }
+
+    public void FinishDialog(float delay = 0f) {
+        _panelCanvasGroup.DOFade(0, .45f).SetDelay(delay);
+
+        DOTween.Sequence()
+            .SetDelay(delay + .45f + .55f)
+            .OnComplete(() => {
+                CurrentNpc.FinishTrade();
+            });
+    }
+
+    private string InterpolateText(string text) {
+        return text
+            .Replace(_itemNameInterpolator, CurrentItemData.displayName)
+            .Replace(_priceInterpolator, CurrentOfferAmount.ToString());
+    }
+
+    private void UpdateButtonStates() {
+        if (!UserCanInput) {
+            _barterButton.interactable = false;
+            _decreaseAmountButton.interactable = false;
+            _increaseAmountButton.interactable = false;
+            _amountInputField.interactable = false;
+        }
+
+        _barterButton.interactable = CurrentOfferAmount.HasValue;
+        _decreaseAmountButton.interactable = CurrentOfferAmount.Value > 0;
+        _increaseAmountButton.interactable = CurrentOfferAmount.Value < 99999;
+        _amountInputField.interactable = true;
+    }
+
+    public enum Action {
+        Selling = 0,
+        Buying = 1
     }
 }

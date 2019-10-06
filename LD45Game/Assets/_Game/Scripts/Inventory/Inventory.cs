@@ -12,6 +12,8 @@ public class Inventory : MonoBehaviour
     [SerializeField] private List<SellSlot> _sellSlots = new List<SellSlot>(); // not dynamic at the moment
     private List<Slot> _storageSlots = new List<Slot>();
 
+    public static Inventory Instance { get; set; }
+
     public bool HasSpace {
         get {
             return _sellSlots.Any(s => !s.IsFilled) || _storageSlots.Any(s => !s.IsFilled);
@@ -20,6 +22,10 @@ public class Inventory : MonoBehaviour
 
     public IEnumerable<Item> ItemsOnDisplay {
         get { return _sellSlots.Where(s => s.IsFilled).Select(s => s.Content); }
+    }
+
+    private void Awake() {
+        Instance = this;
     }
 
     private void Start() {
@@ -52,5 +58,30 @@ public class Inventory : MonoBehaviour
         }
 
         return false;
+    }
+
+    public bool HasItemForSale(ItemData.Type itemType) {
+        return _sellSlots.Any(s => {
+            if (s.Content == null) {
+                return false;
+            }
+            return s.Content.Type == itemType;
+        });
+    }
+
+    public bool SellItem(ItemData.Type itemType) {
+        var slotContainingItem = _sellSlots.FirstOrDefault(s => {
+            if (s.Content == null) {
+                return false;
+            }
+            return s.Content.Type == itemType;
+        });
+        if (slotContainingItem == null) {
+            Debug.LogWarningFormat("Cannot sell item of type '{0}' because it is not in the sell slots.", itemType.ToString());
+            return false;
+        }
+
+        slotContainingItem.Clear();
+        return true;
     }
 }

@@ -65,4 +65,10 @@ public class Slot : MonoBehaviour, IDropHandler {
 
         OnRemoveContent(draggable);
     }
+
+    public void Clear() {
+        Destroy(Content.gameObject);
+
+        OnRemoveContent(Content);
+    }
 }

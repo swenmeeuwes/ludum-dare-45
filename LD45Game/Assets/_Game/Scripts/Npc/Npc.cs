@@ -32,18 +32,33 @@ public class Npc : MonoBehaviour
     public void Activate() {
         if (Model.NpcType == Type.Buying) {
             ShowThoughtCloud(1f);
-        }
 
-        DOTween.Sequence()
-            .Append(transform.DOMove(ShopWaypoint.position, 5f))
-            .AppendCallback(() => {
-                BarterController.Instance.ShowSellDialog(_model.WantedItem);
-            });
+            DOTween.Sequence()
+                .Append(transform.DOMove(ShopWaypoint.position, 5f))
+                .AppendCallback(() => {
+                    if (!Inventory.Instance.HasItemForSale(_model.WantedItem)) {
+                        HideThoughtCloud();
+                        Leave();
+                        return;
+                    }
+                    BarterController.Instance.ShowSellDialog(this);
+                });
+        }
     }
 
-    private void ShowThoughtCloud(float delay) {
+    public void FinishTrade() {
+        HideThoughtCloud();
+        Leave();
+    }
+
+    private void ShowThoughtCloud(float delay = 0f) {
         _thoughCloud.DOFade(1, .45f).SetDelay(delay);
         _thoughCloudCanvasGroup.DOFade(1, .45f).SetDelay(delay);
+    }
+
+    private void HideThoughtCloud(float delay = 0f) {
+        _thoughCloud.DOFade(0, .45f).SetDelay(delay);
+        _thoughCloudCanvasGroup.DOFade(0, .45f).SetDelay(delay);
     }
 
     private void Leave() {

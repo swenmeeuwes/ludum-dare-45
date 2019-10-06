@@ -47,7 +47,12 @@ public class GameController : MonoBehaviour {
 
         yield return new WaitForSeconds(1.5f);
         NpcSpawner.Instance.Spawn(new NpcModel {
-            WantedItem = ItemData.Type.Sword
+            NpcType = Npc.Type.Buying,
+            WantedItem = ItemData.Type.Sword,
+            AmountOfOffers = 3,
+            AmountThresholdForLeaving = 80,
+            InitialOfferAmount = 20,
+            MaxOfferAmount = 40
         });
     }
 }
