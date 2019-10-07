@@ -10,5 +10,7 @@ public class ItemData : ScriptableObject {
 
     public enum Type {
         Sword = 0,
+        Wheat = 1,
+        GoldenNecklaceWithBlueStones = 2,
     }
 }

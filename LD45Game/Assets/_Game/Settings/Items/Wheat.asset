@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 18c75281fce996b439b3b8f913ae3b39, type: 3}
-  m_Name: Sword
+  m_Name: Wheat
   m_EditorClassIdentifier: 
-  type: 0
-  displayName: sword
-  sprite: {fileID: 21300000, guid: 34ea078448da0b64d977427c72b81563, type: 3}
-  minWorth: 25
-  maxWorth: 45
+  type: 1
+  displayName: wheat
+  sprite: {fileID: 21300000, guid: 7cce58b3b9c094c4a93eb86dda184c81, type: 3}
+  minWorth: 5
+  maxWorth: 10

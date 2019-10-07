@@ -64,6 +64,10 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
+    public IEnumerable<Item> GetItemsThatAreForSale() {
+        return _sellSlots.Where(s => s.Content != null).Select(s => s.Content);
+    }
+
     public bool HasItemForSale(ItemData.Type itemType) {
         return _sellSlots.Any(s => {
             if (s.Content == null) {

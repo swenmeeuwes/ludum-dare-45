@@ -39,6 +39,10 @@ public class ItemFactory : MonoBehaviour
         return item;
     }
 
+    public IEnumerable<ItemData> GetAllItemDatas() {
+        return _itemMapping.Select(m => m.data);
+    }
+
     public ItemData GetDataFor(ItemData.Type itemType) {
         var itemMap = _itemMapping.FirstOrDefault(m => m.type == itemType);
         if (itemMap == null) {
@@ -55,6 +59,14 @@ public class ItemFactory : MonoBehaviour
         }
 
         return itemMap.data.sprite;
+    }
+
+    public ItemData GetRandomItemData() {
+        if (_itemMapping.Length == 0) {
+            return null;
+        }
+
+        return _itemMapping[UnityEngine.Random.Range(0, _itemMapping.Length)].data;
     }
 
     [Serializable]

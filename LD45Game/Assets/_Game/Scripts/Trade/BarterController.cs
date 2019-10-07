@@ -90,6 +90,10 @@ public class BarterController : MonoBehaviour {
             CurrentOfferAmount = 0;
         }
 
+        if (CurrentOfferAmount > GameController.Instance.Money) {
+            CurrentOfferAmount = GameController.Instance.Money;
+        }
+
         if (CurrentAction == Action.Selling) {
             if (PreviousOffer.HasValue && CurrentOfferAmount > PreviousOffer) {
                 CurrentOfferAmount = PreviousOffer;

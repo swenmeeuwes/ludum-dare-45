@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -129,33 +130,56 @@ public class GameController : MonoBehaviour {
     }
 
     private Npc SpawnNpc(bool instantlyActivate = false) {
-        var swordItemData = ItemFactory.Instance.GetDataFor(ItemData.Type.Sword);
-
         Npc npc;
         if (Random.value > .6f) {
             // Buying from player
-            var maxOfferAmount = swordItemData.maxWorth + (int)Random.Range(-swordItemData.maxWorth * .2f, swordItemData.maxWorth * .2f);
+            var itemData = GetRandomItemInInventoryOrRandom();
+            var maxOfferAmount = itemData.maxWorth + (int)Random.Range(-itemData.maxWorth * .2f, itemData.maxWorth * .2f);
             npc = NpcSpawner.Instance.Spawn(new NpcModel {
                 NpcType = Npc.Type.Buying,
-                Item = ItemData.Type.Sword,
+                Item = itemData.type,
                 AmountOfOffers = Random.Range(2, 5),
                 AmountThresholdForLeaving = (int)(maxOfferAmount * 1.1f),
-                InitialOfferAmount = swordItemData.minWorth + (int)Random.Range(-swordItemData.minWorth * .2f, swordItemData.minWorth * .2f),
+                InitialOfferAmount = itemData.minWorth + (int)Random.Range(-itemData.minWorth * .2f, itemData.minWorth * .2f),
                 MaxOfferAmount = maxOfferAmount
             }, instantlyActivate);
         } else {
             // Selling to player
-            var lowestOfferAmount = swordItemData.minWorth + (int)Random.Range(-swordItemData.minWorth * .2f, swordItemData.minWorth * .2f);
+            var itemData = GetRandomItemToBuy();
+            var lowestOfferAmount = itemData.minWorth + (int)Random.Range(-itemData.minWorth * .2f, itemData.minWorth * .2f);
             npc = NpcSpawner.Instance.Spawn(new NpcModel {
                 NpcType = Npc.Type.Selling,
                 Item = ItemData.Type.Sword,
                 AmountOfOffers = Random.Range(2, 5),
                 AmountThresholdForLeaving = (int)(lowestOfferAmount * .8f),
-                InitialOfferAmount = (int)(swordItemData.maxWorth * Random.Range(.4f, 1.2f)),
+                InitialOfferAmount = (int)(itemData.maxWorth * Random.Range(.4f, 1.2f)),
                 MaxOfferAmount = lowestOfferAmount
             }, instantlyActivate);
         }
 
         return npc;
+    }
+
+    private ItemData GetRandomItemToBuy() {
+        var playerMoney = GameController.Instance.Money;
+        var allItemDatas = ItemFactory.Instance.GetAllItemDatas();
+        var eligibleItems = allItemDatas.Where(i => i.minWorth < playerMoney).ToArray();
+
+        if (eligibleItems.Length == 0) {
+            // Try random of 3 cheapest
+            var threeCheapestItems = allItemDatas.OrderBy(d => d.minWorth).Take(3).ToArray();
+            return threeCheapestItems[Random.Range(0, threeCheapestItems.Length)];
+        }
+
+        return eligibleItems[Random.Range(0, eligibleItems.Length)];
+    }
+
+    private ItemData GetRandomItemInInventoryOrRandom() {
+        var itemsForSale = Inventory.Instance.GetItemsThatAreForSale().ToList();
+        if (itemsForSale.Count == 0) {
+            return ItemFactory.Instance.GetRandomItemData();
+        }
+
+        return ItemFactory.Instance.GetDataFor(itemsForSale[Random.Range(0, itemsForSale.Count)].Type);
     }
 }
