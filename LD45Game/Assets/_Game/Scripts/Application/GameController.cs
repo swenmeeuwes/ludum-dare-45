@@ -149,7 +149,7 @@ public class GameController : MonoBehaviour {
             var lowestOfferAmount = itemData.minWorth + (int)Random.Range(-itemData.minWorth * .2f, itemData.minWorth * .2f);
             npc = NpcSpawner.Instance.Spawn(new NpcModel {
                 NpcType = Npc.Type.Selling,
-                Item = ItemData.Type.Sword,
+                Item = itemData.type,
                 AmountOfOffers = Random.Range(2, 5),
                 AmountThresholdForLeaving = (int)(lowestOfferAmount * .8f),
                 InitialOfferAmount = (int)(itemData.maxWorth * Random.Range(.4f, 1.2f)),
