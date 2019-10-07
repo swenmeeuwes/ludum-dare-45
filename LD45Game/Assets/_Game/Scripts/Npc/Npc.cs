@@ -9,6 +9,7 @@ public class Npc : MonoBehaviour
     [SerializeField] private SpriteRenderer _thoughCloud;
     [SerializeField] private CanvasGroup _thoughCloudCanvasGroup;
     [SerializeField] private Image _thoughCloudImage;
+    [SerializeField] private SpriteRenderer _holdingItem;
 
     private NpcModel _model;
     public NpcModel Model {
@@ -16,7 +17,7 @@ public class Npc : MonoBehaviour
         set {
             _model = value;
 
-            var wantedItemSprite = ItemFactory.Instance.GetSpriteFor(_model.WantedItem);
+            var wantedItemSprite = ItemFactory.Instance.GetSpriteFor(_model.Item);
             _thoughCloudImage.sprite = wantedItemSprite;
         }
     }
@@ -26,7 +27,8 @@ public class Npc : MonoBehaviour
 
     private void Start() {
         _thoughCloudCanvasGroup.alpha = 0;
-        _thoughCloud.DOFade(0, .0001f);
+        _thoughCloud.DOFade(0, 0);
+        _holdingItem.DOFade(0, 0);
     }
 
     public void Activate() {
@@ -36,18 +38,30 @@ public class Npc : MonoBehaviour
             DOTween.Sequence()
                 .Append(transform.DOMove(ShopWaypoint.position, 5f))
                 .AppendCallback(() => {
-                    if (!Inventory.Instance.HasItemForSale(_model.WantedItem)) {
+                    if (!Inventory.Instance.HasItemForSale(_model.Item)) {
                         HideThoughtCloud();
                         Leave();
                         return;
                     }
                     BarterController.Instance.ShowSellDialog(this);
                 });
+        } else if (Model.NpcType == Type.Selling) {
+            ShowHoldingItem(_model.Item, .3f);
+            DOTween.Sequence()
+                .Append(transform.DOMove(ShopWaypoint.position, 5f))
+                .AppendCallback(() => {
+                    if (!Inventory.Instance.HasSpace) {
+                        Leave();
+                        return;
+                    }
+                    BarterController.Instance.ShowBuyDialog(this);
+                });
         }
     }
 
     public void FinishTrade() {
         HideThoughtCloud();
+        HideHoldingItem();
         Leave();
     }
 
@@ -59,6 +73,20 @@ public class Npc : MonoBehaviour
     private void HideThoughtCloud(float delay = 0f) {
         _thoughCloud.DOFade(0, .45f).SetDelay(delay);
         _thoughCloudCanvasGroup.DOFade(0, .45f).SetDelay(delay);
+    }
+
+    private void ShowHoldingItem(ItemData.Type itemType, float delay = 0f) {
+        var itemData = ItemFactory.Instance.GetDataFor(itemType);
+        ShowHoldingItem(itemData, delay);
+    }
+
+    private void ShowHoldingItem(ItemData itemData, float delay = 0f) {
+        _holdingItem.sprite = itemData.sprite;
+        _holdingItem.DOFade(1, .45f).SetDelay(delay);
+    }
+
+    private void HideHoldingItem(float delay = 0f) {
+        _holdingItem.DOFade(0, .45f).SetDelay(delay);
     }
 
     private void Leave() {

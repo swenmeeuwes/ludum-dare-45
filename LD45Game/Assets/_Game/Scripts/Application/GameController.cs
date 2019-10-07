@@ -46,16 +46,34 @@ public class GameController : MonoBehaviour {
 
         yield return new WaitForSeconds(1.5f);
 
-        StartDay();
+        StartDay(true);
     }
 
-    private void StartDay() {
+    private void StartDay(bool firstDayAfterTutorial = false) {
         _watch.Begin(_availableTimePerDayInSeconds);
 
-        var npc = SpawnNpc();
-        DOTween.Sequence()
-                .SetDelay(.85f)
-                .OnComplete(() => { npc.Activate(); });
+        if (firstDayAfterTutorial) {
+            // Always spawn a npc that wants the tutorial item
+            var tutorialItemData = _tutorialController.ItemAddedByTutorial;
+            var maxOfferAmount = tutorialItemData.maxWorth + (int)Random.Range(-tutorialItemData.maxWorth * .2f, tutorialItemData.maxWorth * .2f);
+
+            var npc = NpcSpawner.Instance.Spawn(new NpcModel {
+                NpcType = Npc.Type.Buying,
+                Item = tutorialItemData.type,
+                AmountOfOffers = Random.Range(3, 5),
+                AmountThresholdForLeaving = (int)(maxOfferAmount * 1.1f),
+                InitialOfferAmount = tutorialItemData.minWorth + (int)Random.Range(-tutorialItemData.minWorth * .2f, tutorialItemData.minWorth * .2f),
+                MaxOfferAmount = maxOfferAmount
+            }, false);
+            DOTween.Sequence()
+                    .SetDelay(.85f)
+                    .OnComplete(() => { npc.Activate(); });
+        } else {
+            var npc = SpawnNpc();
+            DOTween.Sequence()
+                    .SetDelay(.85f)
+                    .OnComplete(() => { npc.Activate(); });
+        }
     }
 
     public void OnNpcLeave(Npc npcThatLeft) {
@@ -72,18 +90,24 @@ public class GameController : MonoBehaviour {
                 .OnComplete(() => {
                     var showUsefullTip = Random.value > .3f;
                     if (showUsefullTip) {
-                        var itemData = ItemFactory.Instance.GetDataFor(newNpc.Model.WantedItem);
-
+                        var itemData = ItemFactory.Instance.GetDataFor(newNpc.Model.Item);
                         var tips = new List<string>();
 
-                        // Starts low
-                        if (newNpc.Model.InitialOfferAmount < itemData.minWorth) tips.Add("Oh I know this homan! This homan always starts really low when haggling.");
+                        if (newNpc.Model.NpcType == Npc.Type.Buying) {
+                            // NPC IS BUYING FROM PLAYER
+                            // Starts low
+                            if (newNpc.Model.InitialOfferAmount < itemData.minWorth) tips.Add("Oh I know this homan! This homan always starts really low when haggling.");
 
-                        // Is willing to pay more that item's max worth
-                        if (newNpc.Model.MaxOfferAmount > itemData.maxWorth) tips.Add("That homan looks like he really wants something. He might pay over what the item is worth.");
+                            // Is willing to pay more that item's max worth
+                            if (newNpc.Model.MaxOfferAmount > itemData.maxWorth) tips.Add("That homan looks like he really wants something. He might pay over what the item is worth.");
 
-                        // Will not iterate as much
-                        if (newNpc.Model.MaxOfferAmount <= 3) tips.Add("Hmm, that human looks a little bit irritated.");
+                            // Will not iterate as much
+                            if (newNpc.Model.MaxOfferAmount <= 3) tips.Add("Hmm, that human looks a little bit irritated.");
+                        } else if (newNpc.Model.NpcType == Npc.Type.Selling) {
+                            // NPC IS SELLING TO PLAYER
+                            //if (newNpc.Model.)
+                            // TODO
+                        }
 
                         if (tips.Count > 0) {
                             HintController.Instance.ShowHint(tips[Random.Range(0, tips.Count)]);
@@ -96,7 +120,7 @@ public class GameController : MonoBehaviour {
                     }
                 });
         }
-        
+
         DOTween.Sequence()
                .SetDelay(showHint ? 2.5f : 0)
                .OnComplete(() => {
@@ -104,18 +128,34 @@ public class GameController : MonoBehaviour {
                });
     }
 
-    private Npc SpawnNpc() {
+    private Npc SpawnNpc(bool instantlyActivate = false) {
         var swordItemData = ItemFactory.Instance.GetDataFor(ItemData.Type.Sword);
 
-        var maxOfferAmount = swordItemData.maxWorth + (int)Random.Range(-swordItemData.maxWorth * .2f, swordItemData.maxWorth * .2f);
+        Npc npc;
+        if (Random.value > .6f) {
+            // Buying from player
+            var maxOfferAmount = swordItemData.maxWorth + (int)Random.Range(-swordItemData.maxWorth * .2f, swordItemData.maxWorth * .2f);
+            npc = NpcSpawner.Instance.Spawn(new NpcModel {
+                NpcType = Npc.Type.Buying,
+                Item = ItemData.Type.Sword,
+                AmountOfOffers = Random.Range(2, 5),
+                AmountThresholdForLeaving = (int)(maxOfferAmount * 1.1f),
+                InitialOfferAmount = swordItemData.minWorth + (int)Random.Range(-swordItemData.minWorth * .2f, swordItemData.minWorth * .2f),
+                MaxOfferAmount = maxOfferAmount
+            }, instantlyActivate);
+        } else {
+            // Selling to player
+            var lowestOfferAmount = swordItemData.minWorth + (int)Random.Range(-swordItemData.minWorth * .2f, swordItemData.minWorth * .2f);
+            npc = NpcSpawner.Instance.Spawn(new NpcModel {
+                NpcType = Npc.Type.Selling,
+                Item = ItemData.Type.Sword,
+                AmountOfOffers = Random.Range(2, 5),
+                AmountThresholdForLeaving = (int)(lowestOfferAmount * .8f),
+                InitialOfferAmount = (int)(swordItemData.maxWorth * Random.Range(.4f, 1.2f)),
+                MaxOfferAmount = lowestOfferAmount
+            }, instantlyActivate);
+        }
 
-        return NpcSpawner.Instance.Spawn(new NpcModel {
-            NpcType = Npc.Type.Buying,
-            WantedItem = ItemData.Type.Sword,
-            AmountOfOffers = Random.Range(2, 5),
-            AmountThresholdForLeaving = (int)(maxOfferAmount * 1.1f),
-            InitialOfferAmount = swordItemData.minWorth + (int)Random.Range(-swordItemData.minWorth * .2f, swordItemData.minWorth * .2f),
-            MaxOfferAmount = maxOfferAmount
-        }, false);
+        return npc;
     }
 }

@@ -39,6 +39,10 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public bool AddItem(ItemData data) {
+        return AddItem(ItemFactory.Instance.CreateFromData(data));
+    }
+
     public bool AddItem(Item item) {
         if (!HasSpace) {
             Debug.LogWarning("Tried adding an item to a full inventory.");

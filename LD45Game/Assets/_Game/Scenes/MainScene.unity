@@ -3982,7 +3982,18 @@ MonoBehaviour:
   m_CharacterLimit: 5
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1551137992}
+        m_MethodName: OnInputAmountValueChangeEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
@@ -6130,6 +6141,29 @@ MonoBehaviour:
   _npcImage: {fileID: 1159050837}
   _npcTextField: {fileID: 2065833489}
   _actionTextField: {fileID: 451014963}
+  _buyingDialogs:
+  - How about %price% for this %item%? It's a good deal!
+  - This %item% is almost brand new! It can be yours for %price% coins!
+  - '%price% coins and this %item% is yours!'
+  - This %item% is surely worth %price% coins!
+  - You can have this %item% for %price% coins!
+  _tooCheapDialogs:
+  - That is a bit on the cheap side don't you think?
+  - A %item% must be worth more than that.
+  - How about %price%?
+  - I can't do that. How about %price%?
+  - Okay, I'm willing to drop the price a bit.
+  _wayTooCheapDialogs:
+  - You can't be serious! I'm leaving.
+  - You obviously have no idea about the price of this item.
+  - Only %price% coins?! I can get way more for this item!
+  - For %price% coins I'll keep this %item%.
+  _boughtDialogs:
+  - It's all yours, enjoy the %item%!
+  - Finally I got rid of this %item%!
+  - I'll take those %price% coins then.
+  - Great doing business with you!
+  - Thanks, I needed that money.
   _sellingDialogs:
   - That is a nice %item%! For %price% coins I'll take it home.
   - '%price% coins for that %item%!'
@@ -6146,15 +6180,15 @@ MonoBehaviour:
   - Pff, good luck selling that for %price% coins!
   - '%price% coins for %item%, that is outrageous!'
   - I'll get it somewhere else...
+  _soldDialogs:
+  - Great doing business with you.
+  - Great, I'll add this %item% to my collection.
+  - Finally, a %item%!
   _tooManyOfferIterationsDialogs:
   - I lost interest...
   - This takes too much effort.
   - You're too though to barter with.
   - If you like that %item% so much, just keep it.
-  _soldDialogs:
-  - Great doing business with you.
-  - Great, I'll add this %item% to my collection.
-  - Finally, a %item%!
   _itemNameInterpolator: '%item%'
   _priceInterpolator: '%price%'
   _newPriceInterpolator: '%newprice%'

@@ -19,6 +19,7 @@ public class TutorialController : MonoBehaviour {
     [SerializeField] private CanvasGroup _sellSlotsDisplay;
 
     [SerializeField] private ItemData _itemAddedByTutorial;
+    public ItemData ItemAddedByTutorial { get { return _itemAddedByTutorial; } }
 
     private bool _moneyWasAwarded = false;
     private bool _tutorialItemWasAwarded = false;
