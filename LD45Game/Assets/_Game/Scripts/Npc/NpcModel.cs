@@ -15,12 +15,12 @@ public class NpcModel {
         get {
             if (NpcType == Npc.Type.Buying) {
                 var offerDelta = MaxOfferAmount - InitialOfferAmount;
-                return offerDelta / AmountOfOffers;
+                return Mathf.CeilToInt(offerDelta / (float)AmountOfOffers);
             }
 
             if (NpcType == Npc.Type.Selling) {
                 var offerDelta = InitialOfferAmount - MaxOfferAmount;
-                return offerDelta / AmountOfOffers;
+                return Mathf.CeilToInt(offerDelta / (float)AmountOfOffers);
             }
 
             Debug.LogWarning("[NpcModel] Cannot compute max offer increment for npc type: " + NpcType.ToString());

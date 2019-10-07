@@ -24,6 +24,14 @@ public class Inventory : MonoBehaviour
         get { return _sellSlots.Where(s => s.IsFilled).Select(s => s.Content); }
     }
 
+    public IEnumerable<Item> ItemsInInventory {
+        get {
+            var onSale = _sellSlots.Where(s => s.IsFilled).Select(s => s.Content);
+            var inStorage = _storageSlots.Where(s => s.IsFilled).Select(s => s.Content);
+            return onSale.Concat(inStorage);
+        }
+    }
+
     public int FilledSlots {
         get {
             return _sellSlots.Count(s => s.IsFilled) + _storageSlots.Count(s => s.IsFilled);

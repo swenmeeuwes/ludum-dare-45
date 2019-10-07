@@ -30,8 +30,8 @@ public class Watch : MonoBehaviour {
         Reset();
 
         _nightFader
-            .DOFade(_nightFaderOpacityTarget / 255f, availableTimeInSeconds * 0.66f)
-            .SetDelay(availableTimeInSeconds * 0.33f);
+            .DOFade(_nightFaderOpacityTarget / 255f, availableTimeInSeconds * 0.4f)
+            .SetDelay(availableTimeInSeconds * 0.6f);
         _content
             .DORotate(new Vector3(0, 0, _endAngle), availableTimeInSeconds, RotateMode.FastBeyond360)
             .SetEase(Ease.Linear)

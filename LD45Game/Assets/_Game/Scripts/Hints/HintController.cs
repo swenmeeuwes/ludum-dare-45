@@ -37,7 +37,7 @@ public class HintController : MonoBehaviour
         StartCoroutine(ShowHintSequence(hintText));
     }
 
-    public IEnumerator ShowHintSequence(string hintText) {
+    private IEnumerator ShowHintSequence(string hintText) {
         _cat.DOMove(_originalCatPosition, .45f, true);
         yield return new WaitForSeconds(.45f);
 

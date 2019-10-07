@@ -3751,7 +3751,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0.29999992}
-  m_SizeDelta: {x: 0.75, y: 0.75}
+  m_SizeDelta: {x: 0.6, y: 0.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &643967222
 MonoBehaviour:
@@ -5332,7 +5332,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0.29999992}
-  m_SizeDelta: {x: 0.75, y: 0.75}
+  m_SizeDelta: {x: 0.6, y: 0.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &954780110
 MonoBehaviour:
@@ -6304,7 +6304,7 @@ MonoBehaviour:
   _moneyDisplay: {fileID: 835893396}
   _storageSlotsDisplay: {fileID: 898994101}
   _sellSlotsDisplay: {fileID: 1456035523}
-  _itemAddedByTutorial: {fileID: 11400000, guid: 88540b4cec3851b4f91db42808a6f34a,
+  _itemAddedByTutorial: {fileID: 11400000, guid: 04900a49561b6c642bbc004c1cef98f6,
     type: 2}
 --- !u!114 &1250645423 stripped
 MonoBehaviour:
@@ -9240,7 +9240,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0.3}
-  m_SizeDelta: {x: 0.75, y: 0.75}
+  m_SizeDelta: {x: 0.6, y: 0.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2048412581
 MonoBehaviour:
