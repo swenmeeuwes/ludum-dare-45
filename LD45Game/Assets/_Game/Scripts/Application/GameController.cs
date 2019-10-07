@@ -113,8 +113,14 @@ public class GameController : MonoBehaviour {
                         if (tips.Count > 0) {
                             HintController.Instance.ShowHint(tips[Random.Range(0, tips.Count)]);
                         } else {
-                            // No usefull tip to show, show a filler instead
-                            HintController.Instance.ShowFiller();
+                            // No usefull tip to show, show a tip about an item
+                            var randomItemData = ItemFactory.Instance.GetRandomItemData();
+                            var itemTips = new List<string>();
+                            itemTips.Add(string.Format("The minimum worth of a {0} is generally around the {1} coins.", randomItemData.displayName, randomItemData.minWorth));
+                            itemTips.Add(string.Format("The maximum worth of a {0} is generally around the {1} coins.", randomItemData.displayName, randomItemData.maxWorth));
+
+                            HintController.Instance.ShowHint(itemTips[Random.Range(0, itemTips.Count)]);
+
                         }
                     } else {
                         HintController.Instance.ShowFiller();
