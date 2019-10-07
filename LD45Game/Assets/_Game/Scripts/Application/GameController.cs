@@ -84,7 +84,7 @@ public class GameController : MonoBehaviour {
         }
 
         var newNpc = SpawnNpc();
-        var showHint = Random.value > .4f;
+        var showHint = Random.value > .5f;
         if (showHint) {
             DOTween.Sequence()
                 .SetDelay(.85f)

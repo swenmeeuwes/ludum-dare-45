@@ -321,13 +321,19 @@ public class BarterController : MonoBehaviour {
 
         _barterButton.interactable = CurrentOfferAmount.HasValue;
         _amountInputField.interactable = true;
+
+        Debug.LogFormat("Current offer amount: {0}\nPrevious offer: {1}\nAccepted amount: {2}", CurrentOfferAmount, PreviousOffer, CurrentAcceptAmountByNpc);
         
         if (CurrentAction == Action.Selling) {
-            _decreaseAmountButton.interactable = CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value > 0 : false;
-            _increaseAmountButton.interactable = PreviousOffer.HasValue && CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value < PreviousOffer : (CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value < 99999 : false);
+            _decreaseAmountButton.interactable = CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value > CurrentAcceptAmountByNpc
+                : (CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value > 0 : false);
+            _increaseAmountButton.interactable = PreviousOffer.HasValue && CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value < PreviousOffer
+                : (CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value < 99999 : false);
         } else if (CurrentAction == Action.Buying) {
-            _decreaseAmountButton.interactable = PreviousOffer.HasValue && CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value > PreviousOffer : (CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value > 0 : false);
-            _increaseAmountButton.interactable = CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value < 99999 : false;
+            _decreaseAmountButton.interactable = PreviousOffer.HasValue && CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value > PreviousOffer 
+                : (CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value > 0 : false);
+            _increaseAmountButton.interactable = CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value < CurrentAcceptAmountByNpc
+                : (CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value < 9999 : false);
         }
     }
 
