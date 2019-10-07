@@ -33,8 +33,7 @@ public class ItemFactory : MonoBehaviour
 
         item.Type = data.type;
         item.DisplayName = data.displayName;
-        item.MinWorth = data.minWorth;
-        item.MaxWorth = data.maxWorth;
+        item.Worth = data.worth;
 
         return item;
     }

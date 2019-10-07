@@ -9,6 +9,7 @@ public class Item : Draggable {
 
     public ItemData.Type Type { get; set; }
     public string DisplayName { get; set; }
-    public int MinWorth { get; set; }
-    public int MaxWorth { get; set; }
+    public int Worth { get; set; }
+    //public int MinWorth { get; set; }
+    //public int MaxWorth { get; set; }
 }

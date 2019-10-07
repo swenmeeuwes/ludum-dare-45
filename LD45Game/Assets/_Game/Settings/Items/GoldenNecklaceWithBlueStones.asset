@@ -15,5 +15,4 @@ MonoBehaviour:
   type: 2
   displayName: golden necklace
   sprite: {fileID: 21300000, guid: ab09c46894c60764e8a1d1353b83502e, type: 3}
-  minWorth: 100
-  maxWorth: 150
+  worth: 250

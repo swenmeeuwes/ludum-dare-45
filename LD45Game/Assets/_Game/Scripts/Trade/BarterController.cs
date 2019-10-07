@@ -120,7 +120,7 @@ public class BarterController : MonoBehaviour {
     }
 
     public void HandleBarterButton() {
-        Debug.LogFormat("Offered {0} coins", CurrentOfferAmount.Value);
+        //Debug.LogFormat("Offered {0} coins", CurrentOfferAmount.Value);
 
         PreviousOffer = CurrentOfferAmount.Value;
 
@@ -134,6 +134,7 @@ public class BarterController : MonoBehaviour {
                 var sellSuccess = Inventory.Instance.SellItem(CurrentItemData.type);
                 if (sellSuccess) {
                     GameController.Instance.Money += CurrentOfferAmount.Value;
+                    GameController.Instance.ItemsSoldToday++;
                 } else {
                     _npcTextField.text = InterpolateText("Where did the %item% go? You cannot just simply remove items from your display that you are selling!");
                 }
@@ -165,15 +166,16 @@ public class BarterController : MonoBehaviour {
 
             // Small chance to let the npc take bigger steps
             // TODO: should we hook this chance to the NpcModel?
-            if (UnityEngine.Random.value > .1f) {
+            if (CurrentNpcModel.MaxOfferAmount > CurrentItemData.worth * 1.2f && UnityEngine.Random.value < .35f) {
+                Debug.Log("Random event: NPC takes bigger barter step!");
+                deltaNegotiation -= 1;
+            } else {
                 // Proceed the "normal way" of bartering
                 if (deltaNegotiation > CurrentNpcModel.MaxOfferIncrement) {
                     deltaNegotiation = CurrentNpcModel.MaxOfferIncrement;
                 } else {
                     deltaNegotiation /= 2;
                 }
-            } else {
-                Debug.Log("Random event: NPC takes bigger barter step!");
             }
 
             CurrentAcceptAmountByNpc += deltaNegotiation;
@@ -183,11 +185,18 @@ public class BarterController : MonoBehaviour {
         } else if (CurrentAction == Action.Buying) {
             if (CurrentOfferAmount >= CurrentAcceptAmountByNpc) {
                 // We have a deal!
+                if (GameController.Instance.Money < CurrentOfferAmount.Value) {
+                    _npcTextField.text = InterpolateText("You do not have %price% coins...");
+                    UserCanInput = false;
+                    return;
+                }
+
                 _npcTextField.text = InterpolateText(_boughtDialogs[UnityEngine.Random.Range(0, _boughtDialogs.Length)]);
 
                 var buySuccess = Inventory.Instance.AddItem(CurrentItemData);
                 if (buySuccess) {
                     GameController.Instance.Money -= CurrentOfferAmount.Value;
+                    GameController.Instance.ItemsBoughtToday++;
                 } else {
                     _npcTextField.text = InterpolateText("You do not have space for %item%? Okay...");
                 }
@@ -322,7 +331,7 @@ public class BarterController : MonoBehaviour {
         _barterButton.interactable = CurrentOfferAmount.HasValue;
         _amountInputField.interactable = true;
 
-        Debug.LogFormat("Current offer amount: {0}\nPrevious offer: {1}\nAccepted amount: {2}", CurrentOfferAmount, PreviousOffer, CurrentAcceptAmountByNpc);
+        //Debug.LogFormat("Current offer amount: {0}\nPrevious offer: {1}\nAccepted amount: {2}", CurrentOfferAmount, PreviousOffer, CurrentAcceptAmountByNpc);
         
         if (CurrentAction == Action.Selling) {
             _decreaseAmountButton.interactable = CurrentOfferAmount.HasValue ? CurrentOfferAmount.Value > CurrentAcceptAmountByNpc

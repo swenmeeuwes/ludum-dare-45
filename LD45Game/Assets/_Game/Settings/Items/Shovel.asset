@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 18c75281fce996b439b3b8f913ae3b39, type: 3}
-  m_Name: Sword
+  m_Name: Shovel
   m_EditorClassIdentifier: 
-  type: 0
-  displayName: sword
-  sprite: {fileID: 21300000, guid: 34ea078448da0b64d977427c72b81563, type: 3}
-  worth: 94
+  type: 4
+  displayName: shovel
+  sprite: {fileID: 21300000, guid: 79167fa73e2032241996213e8a2c5d10, type: 3}
+  worth: 72

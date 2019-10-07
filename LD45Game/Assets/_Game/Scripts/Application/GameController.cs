@@ -22,6 +22,10 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    public int ItemsSoldToday { get; set; }
+    public int ItemsBoughtToday { get; set; }
+    public int MoneyAtStartOfDay { get; set; }
+
     private void Awake() {
         Instance = this;
     }
@@ -52,20 +56,24 @@ public class GameController : MonoBehaviour {
 
     private void StartDay(bool firstDayAfterTutorial = false) {
         _watch.Begin(_availableTimePerDayInSeconds);
+        MoneyAtStartOfDay = Money;
 
         if (firstDayAfterTutorial) {
             // Always spawn a npc that wants the tutorial item
             var tutorialItemData = _tutorialController.ItemAddedByTutorial;
-            var maxOfferAmount = tutorialItemData.maxWorth + (int)Random.Range(-tutorialItemData.maxWorth * .2f, tutorialItemData.maxWorth * .2f);
+            var maxOfferAmount = (int)(tutorialItemData.worth * Random.Range(1.3f, 1.4f));
 
             var npc = NpcSpawner.Instance.Spawn(new NpcModel {
                 NpcType = Npc.Type.Buying,
                 Item = tutorialItemData.type,
-                AmountOfOffers = Random.Range(3, 5),
-                AmountThresholdForLeaving = (int)(maxOfferAmount * 1.1f),
-                InitialOfferAmount = tutorialItemData.minWorth + (int)Random.Range(-tutorialItemData.minWorth * .2f, tutorialItemData.minWorth * .2f),
+                AmountOfOffers = maxOfferAmount > tutorialItemData.worth * 1.2f ? 6 : Random.Range(2, 5),
+                AmountThresholdForLeaving = (int)(tutorialItemData.worth * 2f),
+                InitialOfferAmount = (int)(maxOfferAmount * Random.Range(.4f, .9f)),
                 MaxOfferAmount = maxOfferAmount
             }, false);
+
+            Debug.LogFormat("Tutorial npc:\nWilling to go for: {0}\nInitial offer: {1}\nLeaves at: {2}\nMax increment: {3}", npc.Model.MaxOfferAmount, npc.Model.InitialOfferAmount, npc.Model.AmountThresholdForLeaving, npc.Model.MaxOfferIncrement);
+
             DOTween.Sequence()
                     .SetDelay(.85f)
                     .OnComplete(() => { npc.Activate(); });
@@ -77,9 +85,14 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    public void StartNextDay() {
+        StartDay();
+    }
+
     public void OnNpcLeave(Npc npcThatLeft) {
         if (_watch.DayIsOver) {
             Debug.Log("Day is over!");
+            EndDay();
             return;
         }
 
@@ -97,10 +110,10 @@ public class GameController : MonoBehaviour {
                         if (newNpc.Model.NpcType == Npc.Type.Buying) {
                             // NPC IS BUYING FROM PLAYER
                             // Starts low
-                            if (newNpc.Model.InitialOfferAmount < itemData.minWorth) tips.Add("Oh I know this homan! This homan always starts really low when haggling.");
+                            if (newNpc.Model.InitialOfferAmount < itemData.worth * 0.7f) tips.Add("Oh I know this homan! This homan always starts low when haggling.");
 
                             // Is willing to pay more that item's max worth
-                            if (newNpc.Model.MaxOfferAmount > itemData.maxWorth) tips.Add("That homan looks like he really wants something. He might pay over what the item is worth.");
+                            if (newNpc.Model.MaxOfferAmount > itemData.worth * 1.2f) tips.Add("That homan looks like he really wants something. He might pay over what the item is worth.");
 
                             // Will not iterate as much
                             if (newNpc.Model.MaxOfferAmount <= 3) tips.Add("Hmm, that human looks a little bit irritated.");
@@ -116,8 +129,8 @@ public class GameController : MonoBehaviour {
                             // No usefull tip to show, show a tip about an item
                             var randomItemData = ItemFactory.Instance.GetRandomItemData();
                             var itemTips = new List<string>();
-                            itemTips.Add(string.Format("The minimum worth of a {0} is generally around the {1} coins.", randomItemData.displayName, randomItemData.minWorth));
-                            itemTips.Add(string.Format("The maximum worth of a {0} is generally around the {1} coins.", randomItemData.displayName, randomItemData.maxWorth));
+                            itemTips.Add(string.Format("A {0} generally costs around the {1} coins.", randomItemData.displayName, randomItemData.worth));
+                            itemTips.Add(string.Format("The worth of a {0} is generally around the {1} coins.", randomItemData.displayName, randomItemData.worth));
 
                             HintController.Instance.ShowHint(itemTips[Random.Range(0, itemTips.Count)]);
 
@@ -135,33 +148,43 @@ public class GameController : MonoBehaviour {
                });
     }
 
+    private void EndDay() {
+        EndOfDayPanelController.Instance.Show(ItemsBoughtToday, ItemsSoldToday, Money - MoneyAtStartOfDay);
+
+        ItemsBoughtToday = 0;
+        ItemsSoldToday = 0;
+    }
+
     private Npc SpawnNpc(bool instantlyActivate = false) {
         Npc npc;
-        if (Random.value > .6f) {
+        ItemData itemData;
+        if (Inventory.Instance.FilledSlots > 0 && Random.value > .6f) {
             // Buying from player
-            var itemData = GetRandomItemInInventoryOrRandom();
-            var maxOfferAmount = itemData.maxWorth + (int)Random.Range(-itemData.maxWorth * .2f, itemData.maxWorth * .2f);
+            itemData = GetRandomItemInInventoryOrRandom();
+            var maxOfferAmount = (int)(itemData.worth * Random.Range(.8f, 1.4f));
             npc = NpcSpawner.Instance.Spawn(new NpcModel {
                 NpcType = Npc.Type.Buying,
                 Item = itemData.type,
-                AmountOfOffers = Random.Range(2, 5),
-                AmountThresholdForLeaving = (int)(maxOfferAmount * 1.1f),
-                InitialOfferAmount = itemData.minWorth + (int)Random.Range(-itemData.minWorth * .2f, itemData.minWorth * .2f),
+                AmountOfOffers = maxOfferAmount > itemData.worth * 1.2f ? 6 : Random.Range(2, 5),
+                AmountThresholdForLeaving = (int)(itemData.worth * 1.6f),
+                InitialOfferAmount = (int)(maxOfferAmount * Random.Range(.4f, .9f)),
                 MaxOfferAmount = maxOfferAmount
             }, instantlyActivate);
         } else {
             // Selling to player
-            var itemData = GetRandomItemToBuy();
-            var lowestOfferAmount = itemData.minWorth + (int)Random.Range(-itemData.minWorth * .2f, itemData.minWorth * .2f);
+            itemData = GetRandomItemToBuy();
+            var lowestOfferAmount = (int)(itemData.worth * Random.Range(.5f, 1.5f));
             npc = NpcSpawner.Instance.Spawn(new NpcModel {
                 NpcType = Npc.Type.Selling,
                 Item = itemData.type,
-                AmountOfOffers = Random.Range(2, 5),
-                AmountThresholdForLeaving = (int)(lowestOfferAmount * .8f),
-                InitialOfferAmount = (int)(itemData.maxWorth * Random.Range(.4f, 1.2f)),
+                AmountOfOffers = Random.Range(3, 6),
+                AmountThresholdForLeaving = (int)(itemData.worth * .5f),
+                InitialOfferAmount = (int)(lowestOfferAmount + itemData.worth * Random.Range(0.2f, .9f)),
                 MaxOfferAmount = lowestOfferAmount
             }, instantlyActivate);
         }
+
+        Debug.LogFormat("Npc:\nWilling to go for: {0}\nInitial offer: {1}\nLeaves at: {2}\nMax increment: {3}\nItem worth: {4}", npc.Model.MaxOfferAmount, npc.Model.InitialOfferAmount, npc.Model.AmountThresholdForLeaving, npc.Model.MaxOfferIncrement, itemData.worth);
 
         return npc;
     }
@@ -169,11 +192,11 @@ public class GameController : MonoBehaviour {
     private ItemData GetRandomItemToBuy() {
         var playerMoney = GameController.Instance.Money;
         var allItemDatas = ItemFactory.Instance.GetAllItemDatas();
-        var eligibleItems = allItemDatas.Where(i => i.minWorth < playerMoney).ToArray();
+        var eligibleItems = allItemDatas.Where(i => i.worth < playerMoney).ToArray();
 
         if (eligibleItems.Length == 0) {
             // Try random of 3 cheapest
-            var threeCheapestItems = allItemDatas.OrderBy(d => d.minWorth).Take(3).ToArray();
+            var threeCheapestItems = allItemDatas.OrderBy(d => d.worth).Take(3).ToArray();
             return threeCheapestItems[Random.Range(0, threeCheapestItems.Length)];
         }
 
