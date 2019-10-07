@@ -158,10 +158,18 @@ public class BarterController : MonoBehaviour {
 
             // Else we negotiate
             var deltaNegotiation = CurrentOfferAmount.Value - CurrentAcceptAmountByNpc;
-            if (deltaNegotiation > CurrentNpcModel.MaxOfferIncrement) {
-                deltaNegotiation = CurrentNpcModel.MaxOfferIncrement;
+
+            // Small chance to let the npc take bigger steps
+            // TODO: should we hook this chance to the NpcModel?
+            if (UnityEngine.Random.value > .1f) {
+                // Proceed the "normal way" of bartering
+                if (deltaNegotiation > CurrentNpcModel.MaxOfferIncrement) {
+                    deltaNegotiation = CurrentNpcModel.MaxOfferIncrement;
+                } else {
+                    deltaNegotiation /= 2;
+                }
             } else {
-                deltaNegotiation /= 2;
+                Debug.Log("Random event: NPC takes bigger barter step!");
             }
 
             CurrentAcceptAmountByNpc += deltaNegotiation;
