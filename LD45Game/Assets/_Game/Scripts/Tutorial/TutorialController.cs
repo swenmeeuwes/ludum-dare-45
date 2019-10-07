@@ -132,6 +132,7 @@ public class TutorialController : MonoBehaviour {
         _speechBalloon.DOFade(0, .45f);
         yield return new WaitForSeconds(.45f);
 
+        _cat.DOShakeAnchorPos(.55f, 15, 20);
         _speechBalloonTextField.text = "WHAT?! Dirty paws you say?";
         _speechBalloon.DOFade(1, .45f);
         yield return new WaitForSeconds(.45f + 3f);
@@ -306,7 +307,8 @@ public class TutorialController : MonoBehaviour {
         _speechBalloon.DOFade(0, .45f);
         yield return new WaitForSeconds(.45f);
 
-        _speechBalloonTextField.text = "HOMAN, here comes a client!";
+        _cat.DOShakeAnchorPos(.55f, 15, 20);
+        _speechBalloonTextField.text = "HOMAN, here comes our first client!";
         _speechBalloon.DOFade(1, .45f);
         yield return new WaitForSeconds(.45f + 3f);
 

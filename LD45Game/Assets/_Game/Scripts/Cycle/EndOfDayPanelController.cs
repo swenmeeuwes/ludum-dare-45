@@ -11,6 +11,7 @@ public class EndOfDayPanelController : MonoBehaviour {
     [SerializeField] private CanvasGroup _earnedCanvasGroup;
 
 
+    [SerializeField] private TMP_Text _headerTextField;
     [SerializeField] private TMP_Text _itemBoughtTextField;
     [SerializeField] private TMP_Text _itemsSoldTextField;
     [SerializeField] private TMP_Text _earnedTextField;
@@ -29,7 +30,7 @@ public class EndOfDayPanelController : MonoBehaviour {
         _panelCanvasGroup.gameObject.SetActive(false);
     }
 
-    public void Show(int itemsBought, int itemsSold, int earned) {
+    public void Show(int itemsBought, int itemsSold, int earned, int day) {
         _overlayCanvasGroup.gameObject.SetActive(true);
         _panelCanvasGroup.gameObject.SetActive(true);
 
@@ -37,6 +38,7 @@ public class EndOfDayPanelController : MonoBehaviour {
         _soldCanvasGroup.alpha = 0;
         _earnedCanvasGroup.alpha = 0;
 
+        _headerTextField.text = "End of day " + day.ToString();
         _itemBoughtTextField.text = itemsBought.ToString();
         _itemsSoldTextField.text = itemsSold.ToString();
         _earnedTextField.text = earned.ToString();

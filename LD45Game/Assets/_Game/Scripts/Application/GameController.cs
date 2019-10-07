@@ -22,6 +22,17 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    [SerializeField] private TMP_Text _currentDayTextField;
+
+    private int _currentDay;
+    public int CurrentDay {
+        get { return _currentDay; }
+        set {
+            _currentDay = value;
+            _currentDayTextField.text = "Day " + _currentDay;
+        }
+    }
+
     public int ItemsSoldToday { get; set; }
     public int ItemsBoughtToday { get; set; }
     public ItemData.Type? TodaysSpecialItemType { get; set; }
@@ -32,6 +43,8 @@ public class GameController : MonoBehaviour {
     }
 
     private void Start() {
+        CurrentDay = 1;
+
         StartCoroutine(TutorialSequence());
     }
 
@@ -96,6 +109,8 @@ public class GameController : MonoBehaviour {
     }
 
     public void StartNextDay() {
+        CurrentDay++;
+
         TodaysSpecialItemType = GetItemTypeThatIsWorthMoreToday();
         StartDay();
     }
@@ -160,7 +175,7 @@ public class GameController : MonoBehaviour {
     }
 
     private void EndDay() {
-        EndOfDayPanelController.Instance.Show(ItemsBoughtToday, ItemsSoldToday, Money - MoneyAtStartOfDay);
+        EndOfDayPanelController.Instance.Show(ItemsBoughtToday, ItemsSoldToday, Money - MoneyAtStartOfDay, CurrentDay);
 
         ItemsBoughtToday = 0;
         ItemsSoldToday = 0;
