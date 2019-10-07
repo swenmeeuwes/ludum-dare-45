@@ -11,6 +11,9 @@ public class GameController : MonoBehaviour {
     [SerializeField] private TMP_Text _moneyTextField;
     [SerializeField] private int _availableTimePerDayInSeconds;
 
+    [SerializeField] private int _moneyGoal;
+    public int MoneyGoal { get { return _moneyGoal; } }
+
     public static GameController Instance { get; private set; }
 
     private int _money = 0;

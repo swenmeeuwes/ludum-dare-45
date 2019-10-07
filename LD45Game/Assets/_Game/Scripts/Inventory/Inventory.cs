@@ -77,6 +77,20 @@ public class Inventory : MonoBehaviour
         return false;
     }
 
+    public bool AddItemToStorage(Item item) {
+        if (_storageSlots.All(s => s.IsFilled)) {
+            Debug.LogWarning("Tried adding an item to a full storage.");
+        }
+
+        var firstFreeStorageSlot = _storageSlots.FirstOrDefault(s => !s.IsFilled);
+        if (firstFreeStorageSlot != null) {
+            firstFreeStorageSlot.Add(item);
+            return true;
+        }
+
+        return false;
+    }
+
     public IEnumerable<Item> GetItemsThatAreForSale() {
         return _sellSlots.Where(s => s.Content != null).Select(s => s.Content);
     }

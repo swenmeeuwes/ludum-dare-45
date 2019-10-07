@@ -65,7 +65,7 @@ public class TutorialController : MonoBehaviour {
 
         if (!_tutorialItemWasAwarded) {
             var tutorialItem = ItemFactory.Instance.CreateFromData(_itemAddedByTutorial);
-            _inventory.AddItem(tutorialItem);
+            _inventory.AddItemToStorage(tutorialItem);
             _tutorialItemWasAwarded = true;
         }
 
@@ -225,7 +225,7 @@ public class TutorialController : MonoBehaviour {
         yield return new WaitForSeconds(.45f);
 
         var tutorialItem = ItemFactory.Instance.CreateFromData(_itemAddedByTutorial);
-        _inventory.AddItem(tutorialItem);
+        _inventory.AddItemToStorage(tutorialItem);
         _tutorialItemWasAwarded = true;
 
         yield return new WaitForSeconds(2f);
@@ -301,6 +301,20 @@ public class TutorialController : MonoBehaviour {
         yield return new WaitForSeconds(.45f);
 
         _speechBalloonTextField.text = "Great! Homan is such a quick learner.";
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        _speechBalloonTextField.text = string.Format("We'll need {0} coins to afford a house.", GameController.Instance.MoneyGoal);
+        _speechBalloon.DOFade(1, .45f);
+        yield return new WaitForSeconds(.45f + 3f);
+
+        _speechBalloon.DOFade(0, .45f);
+        yield return new WaitForSeconds(.45f);
+
+        _speechBalloonTextField.text = "But I'm sure that we can reach our goal together!";
         _speechBalloon.DOFade(1, .45f);
         yield return new WaitForSeconds(.45f + 3f);
 
