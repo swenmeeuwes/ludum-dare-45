@@ -62,18 +62,17 @@ public class Inventory : MonoBehaviour
             Debug.LogWarning("Tried adding an item to a full inventory.");
         }
 
-        // Prefer putting it in storage, but if there is no space put it in selling gallery
-        var firstFreeStorageSlot = _storageSlots.FirstOrDefault(s => !s.IsFilled);
-        if (firstFreeStorageSlot != null) {
-            firstFreeStorageSlot.Add(item);
-            return true;
-        } 
-
         var firstFreeSellSlot = _sellSlots.FirstOrDefault(s => !s.IsFilled);
         if (firstFreeSellSlot != null) {
             firstFreeSellSlot.Add(item);
             return true;
         }
+
+        var firstFreeStorageSlot = _storageSlots.FirstOrDefault(s => !s.IsFilled);
+        if (firstFreeStorageSlot != null) {
+            firstFreeStorageSlot.Add(item);
+            return true;
+        } 
 
         return false;
     }

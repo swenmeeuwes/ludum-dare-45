@@ -210,7 +210,7 @@ public class TutorialController : MonoBehaviour {
         _speechBalloon.DOFade(0, .45f);
         yield return new WaitForSeconds(.45f);
 
-        _speechBalloonTextField.text = "We can use this to stockpile items that might increase in price, as these items are not for sale";
+        _speechBalloonTextField.text = "We can use this to stockpile items that might increase in demand.";
         _speechBalloon.DOFade(1, .45f);
         yield return new WaitForSeconds(.45f + 7f);
 
