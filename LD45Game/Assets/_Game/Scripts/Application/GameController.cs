@@ -79,14 +79,14 @@ public class GameController : MonoBehaviour {
         if (firstDayAfterTutorial) {
             // Always spawn a npc that wants the tutorial item
             var tutorialItemData = _tutorialController.ItemAddedByTutorial;
-            var maxOfferAmount = (int)(tutorialItemData.worth * Random.Range(1.3f, 1.4f));
+            var maxOfferAmount = (int)(tutorialItemData.worth * Random.Range(1.6f, 2f));
 
             npc = NpcSpawner.Instance.Spawn(new NpcModel {
                 NpcType = Npc.Type.Buying,
                 Item = tutorialItemData.type,
-                AmountOfOffers = maxOfferAmount > tutorialItemData.worth * 1.2f ? 6 : Random.Range(2, 5),
+                AmountOfOffers = maxOfferAmount > tutorialItemData.worth * 1.6f ? 6 : Random.Range(2, 5),
                 AmountThresholdForLeaving = (int)(tutorialItemData.worth * 2f),
-                InitialOfferAmount = (int)(maxOfferAmount * Random.Range(.4f, .9f)),
+                InitialOfferAmount = (int)(maxOfferAmount * Random.Range(.8f, .9f)),
                 MaxOfferAmount = maxOfferAmount
             }, false);
 
@@ -142,7 +142,7 @@ public class GameController : MonoBehaviour {
                             if (newNpc.Model.InitialOfferAmount < itemData.worth * 0.7f) tips.Add("Oh I know this homan! This homan always starts low when haggling.");
 
                             // Is willing to pay more that item's max worth
-                            if (newNpc.Model.MaxOfferAmount > itemData.worth * 1.2f) tips.Add("That homan looks like he really wants something. He might pay over what the item is worth.");
+                            if (newNpc.Model.MaxOfferAmount > itemData.worth * 1.6f) tips.Add("That homan looks like he really wants something. He might pay over what the item is worth.");
 
                             // Will not iterate as much
                             if (newNpc.Model.MaxOfferAmount <= 3) tips.Add("Hmm, that human looks a little bit irritated.");
@@ -187,7 +187,7 @@ public class GameController : MonoBehaviour {
     private Npc SpawnNpc(bool instantlyActivate = false) {
         Npc npc;
         ItemData itemData;
-        if (Inventory.Instance.FilledSlots > 0 && Random.value > .6f) {
+        if (Inventory.Instance.FilledSlots > 0 && ((Money < 10) || Random.value > .6f)) {
             // Buying from player
             itemData = GetRandomItemInInventoryOrRandom();
             var worth = itemData.worth;
@@ -195,13 +195,13 @@ public class GameController : MonoBehaviour {
                 worth *= 2;
             }
 
-            var maxOfferAmount = (int)(worth * Random.Range(.8f, 1.4f));
+            var maxOfferAmount = (int)(worth * Random.Range(.8f, 2f));
             npc = NpcSpawner.Instance.Spawn(new NpcModel {
                 NpcType = Npc.Type.Buying,
                 Item = itemData.type,
-                AmountOfOffers = maxOfferAmount > worth * 1.2f ? 6 : Random.Range(2, 5),
-                AmountThresholdForLeaving = (int)(worth * 1.6f),
-                InitialOfferAmount = (int)(maxOfferAmount * Random.Range(.4f, .9f)),
+                AmountOfOffers = maxOfferAmount > worth * 1.6f ? 6 : Random.Range(2, 5),
+                AmountThresholdForLeaving = (int)(worth * 2.4f),
+                InitialOfferAmount = (int)(maxOfferAmount * Random.Range(.6f, .8f)),
                 MaxOfferAmount = maxOfferAmount
             }, instantlyActivate);
         } else {
@@ -212,13 +212,13 @@ public class GameController : MonoBehaviour {
                 worth *= 2;
             }
 
-            var lowestOfferAmount = (int)(worth * Random.Range(.5f, 1.5f));
+            var lowestOfferAmount = (int)(worth * Random.Range(.4f, 1.4f));
             npc = NpcSpawner.Instance.Spawn(new NpcModel {
                 NpcType = Npc.Type.Selling,
                 Item = itemData.type,
                 AmountOfOffers = Random.Range(3, 6),
-                AmountThresholdForLeaving = (int)(worth * .5f),
-                InitialOfferAmount = (int)(lowestOfferAmount + worth * Random.Range(0.2f, .9f)),
+                AmountThresholdForLeaving = (int)(worth * .3f),
+                InitialOfferAmount = (int)(lowestOfferAmount + worth * Random.Range(0.2f, .4f)),
                 MaxOfferAmount = lowestOfferAmount
             }, instantlyActivate);
         }

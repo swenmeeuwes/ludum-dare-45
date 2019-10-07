@@ -3670,7 +3670,7 @@ MonoBehaviour:
   _tutorialController: {fileID: 1228682383}
   _moneyTextField: {fileID: 699735751}
   _availableTimePerDayInSeconds: 90
-  _moneyGoal: 1000
+  _moneyGoal: 500
   _currentDayTextField: {fileID: 1856123302}
 --- !u!4 &591166123
 Transform:
